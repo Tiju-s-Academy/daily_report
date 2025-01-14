@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="report_group" model="ir.module.category">
+        <field name="name">Daily Report</field>
+        <field name="sequence">28</field>
+        <field name="visible" eval="0"/>
+    </record>
+    <record id="admin_report" model="res.groups">
+        <field name="name">admin</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
+    <record id="manager_report" model="res.groups">
+        <field name="name">manger</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
+    <record id="user_report" model="res.groups">
+        <field name="name">user</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
+</odoo>
+
+

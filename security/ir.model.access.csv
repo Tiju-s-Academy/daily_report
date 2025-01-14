@@ -1,0 +1,13 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+access_job_status_admin,job status admin,model_job_status,admin_report,1,1,1,1
+access_report_admin,report admin,model_report,admin_report,1,1,1,1
+access_employee_report_admin,employee report admin,model_employee_report,admin_report,1,1,1,1
+
+access_job_status_manager,job status manager,model_job_status,manager_report,1,1,0,0
+access_report_manager,report manager,model_report,manager_report,1,1,0,0
+access_employee_report_manager,employee report manager,model_employee_report,manager_report,1,1,1,0
+
+access_job_status_user,job status user,model_job_status,user_report,1,1,0,0
+access_report_user,report user,model_report,user_report,1,1,0,0
+access_employee_report_user,employee report user,model_employee_report,user_report,1,1,1,0
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_job_status_tree" model="ir.ui.view">
+        <field name="name">job.status.tree</field>
+        <field name="model">job.status</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_job_status" model="ir.actions.act_window">
+        <field name="name">Job Status</field>
+        <field name="res_model">job.status</field>
+        <field name="view_mode">tree</field>
+    </record>
+</odoo>

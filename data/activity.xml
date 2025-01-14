@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="mail_activity_work_log" model="mail.activity.type">
+        <field name="name">Work Log: Approval</field>
+        <field name="res_model">employee.report</field>
+        <field name="delay_count">30</field>
+    </record>
+</odoo>

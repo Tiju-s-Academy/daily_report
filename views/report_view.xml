@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="view_report_tree" model="ir.ui.view">
+        <field name="name">report.tree</field>
+        <field name="model">report</field>
+        <field name="arch" type="xml">
+            <tree string="Report">
+                <field name="project_id"/>
+                <field name="task_id"/>
+                <field name="activity"/>
+                <field name="time_taken"/>
+                <field name="current_status"/>
+                <field name="completion"/>
+                <field name="to_work_on"/>
+                <field name="remarks_if_any"/>
+                <field name="employee_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_report" model="ir.actions.act_window">
+        <field name="name">Reports</field>
+        <field name="res_model">report</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
