@@ -14,20 +14,39 @@
             </tree>
         </field>
     </record>
+    <record id="view_employee_report_search" model="ir.ui.view">
+        <field name="name">employee.report.search</field>
+        <field name="model">employee.report</field>
+        <field name="arch" type="xml">
+            <search string="Employee Reports">
+                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>
+                <filter string="My Team" name="my_team" domain="[('name.parent_id.user_id', '=', uid)]"/>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="state"/>
+            </search>
+        </field>
+    </record>
     <record id="view_employee_report_form" model="ir.ui.view">
         <field name="name">employee.report.form</field>
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
             <form string="Employee Report">
+                <field name="is_manager" invisible="1"/>
                 <header>
-                    <button name="action_submit" string="Submit" type="object" invisible="state !='draft'" class="oe_highlight"/>
-                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state != 'submitted'"
-                            groups="daily_report.admin_report,daily_report.manager_report"/>
-                    <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="state != 'approved'"
-                            groups="daily_report.admin_report,daily_report.manager_report"/>
+                    <button name="action_submit" string="Submit" type="object" invisible="state !='draft'"
+                            class="oe_highlight"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            invisible="not is_manager or state == 'approved'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                            invisible="not is_manager or state == 'rejected'"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Approved"
+                            invisible="state != 'approved'"/>
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
+                            invisible="state != 'rejected'"/>
                     <group>
                         <group>
                             <field name="name" required="1"/>
@@ -36,19 +55,19 @@
                         </group>
                         <group>
                             <field name="branch_id"/>
-                            <field name="actual_work_hours"/>
+                            <field name="actual_work_hours" readonly="state !='draft'"/>
                         </group>
 
                     </group>
                     <notebook>
                         <page string="Daily Tasks">
-                            <field name="report_ids">
+                            <field name="report_ids" readonly="state !='draft'">
                                 <tree editable="bottom">
                                     <field name="project_id" required="1"/>
                                     <field name="task_id" required="1"/>
                                     <field name="time_taken" required="1"/>
                                     <field name="activity"/>
-                                    <field name="current_status"/>
+                                    <field name="current_status" required="1"/>
                                     <field name="completion"/>
                                     <field name="to_work_on"/>
                                     <field name="remarks_if_any"/>
@@ -56,11 +75,11 @@
                             </field>
                             <group>
                                 <group>
-                                    <field name="prepared_by"/>
+                                    <field name="prepared_by" readonly="1"/>
                                     <field name="date"/>
                                 </group>
                                 <group>
-                                    <field name="approved_by"/>
+                                    <field name="approved_by" readonly="1"/>
                                 </group>
                             </group>
 
@@ -78,10 +97,13 @@
         <field name="name">Employee Reports</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_for_me': 1}</field>
+        <field name="search_view_id" ref="view_employee_report_search"/>
         <field name="help" type="html">
             <p>
                 Use this view to manage and track employee reports.
             </p>
         </field>
     </record>
+
 </odoo>

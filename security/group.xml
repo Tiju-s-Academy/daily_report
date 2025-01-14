@@ -9,10 +9,6 @@
         <field name="name">admin</field>
         <field name="category_id" ref="report_group"/>
     </record>
-    <record id="manager_report" model="res.groups">
-        <field name="name">manger</field>
-        <field name="category_id" ref="report_group"/>
-    </record>
     <record id="user_report" model="res.groups">
         <field name="name">user</field>
         <field name="category_id" ref="report_group"/>

@@ -2,7 +2,7 @@
     'name': 'Daily Report',
     'version': '17.0.1.0.0',
     'summary': 'Daily Report',
-    'depends': ['base', 'web', 'mail', 'project', 'hr'],
+    'depends': ['base', 'web', 'mail', 'hr','tijus_custom_base'],
     'author': 'Tijus Academy',
     'data': [
         'data/activity.xml',
