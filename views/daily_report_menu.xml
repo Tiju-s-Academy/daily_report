@@ -13,6 +13,7 @@
 <!--              parent="menu_daily_report_root"-->
 <!--              sequence="2"-->
 <!--              action="action_report"/>-->
-    <menuitem id="menu_job_status" name="Job Satus" parent="menu_daily_report_root"
+    <menuitem id="menu_job_status" name="Job Status" parent="menu_daily_report_root"
+              groups="daily_report.admin_report"
               action="action_job_status" sequence="3"/>
 </odoo>
