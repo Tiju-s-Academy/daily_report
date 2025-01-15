@@ -10,7 +10,7 @@
                 <field name="activity"/>
                 <field name="time_taken"/>
                 <field name="current_status"/>
-                <field name="completion"/>
+                <field name="expected_close_date"/>
                 <field name="to_work_on"/>
                 <field name="remarks_if_any"/>
                 <field name="employee_id"/>

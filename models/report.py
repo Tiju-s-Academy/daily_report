@@ -4,12 +4,12 @@ class Report(models.Model):
     _name = 'report'
     _description = 'Report'
 
-    project_id = fields.Char(string='Project')
+    project_id = fields.Char(string='Project | Objectives')
     task_id = fields.Char(string='Task')
-    activity = fields.Char(string='Activity')
+    activity = fields.Char(string='Activities')
     time_taken = fields.Float(string='Time Taken')
     current_status = fields.Many2one('job.status', string='Current Status')
-    completion = fields.Boolean(string='Completed')
+    expected_close_date = fields.Date(string='Expected Close Date')
     to_work_on = fields.Char(string='To Work On')
     remarks_if_any = fields.Char(string='Remarks If Any')
 
