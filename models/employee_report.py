@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models,_
+from odoo.exceptions import ValidationError
 
 class EmployeeReport(models.Model):
     _name = 'employee.report'
@@ -21,7 +22,7 @@ class EmployeeReport(models.Model):
     report_ids = fields.One2many('report', 'employee_id', string="Daily Report")
 
     total_work_hours = fields.Float(string='Total Work Hours', compute='_compute_total_work_hours', store=True)
-    actual_work_hours = fields.Float(string='Actual Work Hours(Hour)', compute='_compute_actual_work_hours', store=True)
+    actual_work_hours = fields.Float(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
 
     @api.depends('report_ids.task_id','report_ids.time_taken')
     def _compute_actual_work_hours(self):
@@ -36,6 +37,27 @@ class EmployeeReport(models.Model):
                               ('rejected', 'Rejected')], string='Status', default='draft',tracking=True)
     is_manager = fields.Boolean(string="Is Manager",compute="_compute_is_manager",store=False)
 
+    is_half_day = fields.Boolean(string="Half day report",compute="_compute_is_half_day")
+
+    @api.depends('name')
+    def _compute_is_half_day(self):
+        print("half day check")
+        today = fields.Date.today()
+        leave = self.env['hr.leave'].sudo().search([
+            ('employee_id', '=', self.name.id),  # For the specific employee
+            ('state', '=', 'validate'),  # Only validated leaves
+            ('request_date_from', '<=', today),  # Leave started on or before today
+            ('request_date_to', '>=', today)  # Leave ends on or after today
+        ])
+        if leave.request_unit_half == True:
+            self.is_half_day = True
+            self.total_work_hours = self.name.resource_calendar_id.hours_per_day / 2.0
+        else:
+            self.is_half_day = False
+
+
+
+
     @api.depends('name', 'name.parent_id')
     def _compute_is_manager(self):
         for record in self:
@@ -49,11 +71,19 @@ class EmployeeReport(models.Model):
             else:
                 record.total_work_hours = 0.0
 
+    @api.constrains('name', 'date')
+    def _check_unique_record_per_day(self):
+        for record in self:
+            if self.search_count([('name', '=', record.name.id), ('date', '=', record.date)]) > 1:
+                raise ValidationError(_("An employee can only submit one report per day."))
+
     def action_submit(self):
+
+        if self.actual_work_hours < self.total_work_hours:
+            raise ValidationError(_("The Total work hours should be achieved by the employee."))
         self.state = 'submitted'
         self.prepared_by = self.env.user.employee_id.id
         manager = self.name.parent_id
-        print("manamger",manager)
         if manager:
             self.activity_schedule(
                 'daily_report.mail_activity_work_log',

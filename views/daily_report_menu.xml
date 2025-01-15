@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <menuitem id="menu_daily_report_root"
-              name="Work Log"
+              name="DWR"
               web_icon="daily_report,static/description/icon.png"/>
     <menuitem id="menu_employee_report"
               name="Employee Report"
