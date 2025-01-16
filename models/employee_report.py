@@ -1,5 +1,6 @@
 from odoo import api, fields, models,_
 from odoo.exceptions import ValidationError
+import re
 
 class EmployeeReport(models.Model):
     _name = 'employee.report'
@@ -21,14 +22,47 @@ class EmployeeReport(models.Model):
 
     report_ids = fields.One2many('report', 'employee_id', string="Daily Report")
 
-    total_work_hours = fields.Float(string='Total Work Hours', compute='_compute_total_work_hours', store=True)
-    actual_work_hours = fields.Float(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
+    total_work_hours = fields.Char(string='Total Work Hours', compute='_compute_total_work_hours', store=True)
 
-    @api.depends('report_ids.task_id','report_ids.time_taken')
+    @api.depends('name')
+    def _compute_total_work_hours(self):
+        for record in self:
+            if record.name and record.name.resource_calendar_id:
+                # Get the total hours per day as a float
+                hours_per_day = record.name.resource_calendar_id.hours_per_day
+                # Convert the float to hours and minutes format
+                hours = int(hours_per_day)
+                minutes = round((hours_per_day - hours) * 60)
+                # Format as HH:MM
+                record.total_work_hours = f'{hours:02}:{minutes:02}'
+            else:
+                # If no value is found, set it to 0:00
+                record.total_work_hours = '00:00'
+    actual_work_hours = fields.Char(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
+    #
+    @api.depends('report_ids.task_id', 'report_ids.time_taken')
     def _compute_actual_work_hours(self):
         for record in self:
-            total_minutes = sum(record.report_ids.mapped('time_taken'))
-            record.actual_work_hours = total_minutes
+            total_minutes = 0
+            # Validate time_taken format as HH:MM
+            for report in record.report_ids:
+                if report.time_taken:
+                    # Check if time_taken matches the format HH:MM
+                    if not re.match(r'^\d{1,2}:\d{2}$', str(report.time_taken)):
+                        raise ValidationError(_("Time must be in HH:MM format."))
+            for time_str in record.report_ids.mapped('time_taken'):
+                if time_str:
+                    # Split the time string into hours and minutes
+                    hours, minutes = map(int, time_str.split(':'))
+                    total_minutes += hours * 60 + minutes
+
+            # Convert total minutes back to HH:MM format
+            hours, minutes = divmod(total_minutes, 60)
+            record.actual_work_hours = f"{hours:02}:{minutes:02}"
+            print(record.actual_work_hours)
+            print(type(record.actual_work_hours))
+            print(record.total_work_hours)
+            print(type(record.total_work_hours))
 
     prepared_by = fields.Many2one('hr.employee', string="Prepared By", default=lambda self: self.env.user.employee_id)
     approved_by = fields.Many2one('hr.employee', string="Approved By")
@@ -63,13 +97,7 @@ class EmployeeReport(models.Model):
         for record in self:
             record.is_manager = record.name.parent_id.user_id == self.env.user
 
-    @api.depends('name')
-    def _compute_total_work_hours(self):
-        for record in self:
-            if record.name and record.name.resource_calendar_id:
-                record.total_work_hours = record.name.resource_calendar_id.hours_per_day
-            else:
-                record.total_work_hours = 0.0
+
 
     @api.constrains('name', 'date')
     def _check_unique_record_per_day(self):
@@ -78,7 +106,8 @@ class EmployeeReport(models.Model):
                 raise ValidationError(_("An employee can only submit one report per day."))
 
     def action_submit(self):
-
+        if self.actual_work_hours == self.total_work_hours:
+            print("yesss")
         if self.actual_work_hours < self.total_work_hours:
             raise ValidationError(_("The Total work hours should be achieved by the employee."))
         self.state = 'submitted'
@@ -108,6 +137,8 @@ class EmployeeReport(models.Model):
         activity_ids = self.activity_ids
         if activity_ids:
             activity_ids.unlink()
+
+    summary = fields.Html(string="Summary",store=True)
 
 
 

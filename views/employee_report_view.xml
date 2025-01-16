@@ -7,9 +7,7 @@
             <tree string="Employee Reports">
                 <field name="name"/>
                 <field name="department_id"/>
-                <field name="total_work_hours"/>
-                <field name="actual_work_hours"/>
-                <field name="approved_by"/>
+                <field name="summary"/>
                 <field name="date"/>
             </tree>
         </field>
@@ -76,6 +74,11 @@
                                     <field name="remarks_if_any"/>
                                 </tree>
                             </field>
+                            <group>
+                                <field name="summary"/>
+                            </group>
+                            <br></br>
+                            <br></br>
                             <group>
                                 <group>
                                     <field name="prepared_by" readonly="1"/>
