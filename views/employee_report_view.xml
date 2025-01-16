@@ -76,7 +76,7 @@
                                     <field name="task_id" required="1"/>
                                     <field name="activity"/>
                                     <field name="time_taken" required="1" widget="float_time"/>
-                                    <field name="current_status" required="1" widget="badge"/>
+                                    <field name="current_status" required="1"/>
                                     <field name="to_work_on"/>
                                     <field name="expected_close_date"/>
                                     <field name="remarks_if_any"/>
