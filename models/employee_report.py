@@ -28,34 +28,42 @@ class EmployeeReport(models.Model):
     def _compute_total_work_hours(self):
         for record in self:
             if record.name and record.name.resource_calendar_id:
-                try:
-                    hours_per_day = float(record.name.resource_calendar_id.hours_per_day)
-                    hours = int(hours_per_day)
-                    minutes = int((hours_per_day - hours) * 60)
-                    record.total_work_hours = f'{hours:02d}:{minutes:02d}'
-                except (ValueError, TypeError):
-                    record.total_work_hours = '00:00'
+                hours_per_day = record.name.resource_calendar_id.hours_per_day
+                if record.is_half_day:
+                    hours_per_day = hours_per_day / 2.0
+                hours = int(hours_per_day)
+                minutes = int((hours_per_day - hours) * 60)
+                record.total_work_hours = f"{hours:02d}:{minutes:02d}"
             else:
-                record.total_work_hours = '00:00'
+                record.total_work_hours = "00:00"
 
     actual_work_hours = fields.Char(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
     #
-    @api.depends('report_ids.task_id', 'report_ids.time_taken')
+    @api.depends('report_ids.time_taken')
     def _compute_actual_work_hours(self):
         for record in self:
             total_minutes = 0
             for report in record.report_ids:
-                if report.time_taken:
-                    # Improved time format validation
-                    if re.match(r'^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', report.time_taken):
+                if report.time_taken and isinstance(report.time_taken, str):
+                    try:
                         hours, minutes = map(int, report.time_taken.split(':'))
                         total_minutes += hours * 60 + minutes
-                    else:
-                        continue  # Skip invalid formats instead of raising error
-
-            # Convert total minutes back to HH:MM format
+                    except (ValueError, AttributeError):
+                        continue
+            
             hours, minutes = divmod(total_minutes, 60)
             record.actual_work_hours = f"{hours:02d}:{minutes:02d}"
+
+    def _compare_time_strings(self, time1, time2):
+        """Compare two time strings in HH:MM format"""
+        if not time1 or not time2:
+            return False
+        try:
+            h1, m1 = map(int, time1.split(':'))
+            h2, m2 = map(int, time2.split(':'))
+            return (h1 * 60 + m1) < (h2 * 60 + m2)
+        except (ValueError, AttributeError):
+            return False
 
     @api.constrains('report_ids.time_taken')
     def _check_time_format(self):
@@ -112,7 +120,7 @@ class EmployeeReport(models.Model):
                 if not report.to_work_on or not report.expected_close_date:
                     raise ValidationError(_("For task '%s': When status is not 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory.") % report.task_id)
 
-        if self.actual_work_hours < self.total_work_hours:
+        if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
             raise ValidationError(_("The Total work hours should be achieved by the employee."))
         
         self.state = 'submitted'
