@@ -106,17 +106,22 @@ class EmployeeReport(models.Model):
                 raise ValidationError(_("An employee can only submit one report per day."))
 
     def action_submit(self):
-        if self.actual_work_hours == self.total_work_hours:
-            print("yesss")
+        # Validate incomplete tasks
+        for report in self.report_ids:
+            if report.current_status.name.strip().lower() != 'completed':
+                if not report.to_work_on or not report.expected_close_date:
+                    raise ValidationError(_("For task '%s': When status is not 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory.") % report.task_id)
+
         if self.actual_work_hours < self.total_work_hours:
             raise ValidationError(_("The Total work hours should be achieved by the employee."))
+        
         self.state = 'submitted'
         self.prepared_by = self.env.user.employee_id.id
         manager = self.name.parent_id
         if manager:
             self.activity_schedule(
                 'daily_report.mail_activity_work_log',
-                user_id= manager.user_id.id,
+                user_id=manager.user_id.id,
             )
 
     def action_approve(self):

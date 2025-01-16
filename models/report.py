@@ -1,4 +1,5 @@
-from odoo import api,models,fields
+from odoo import api,models,fields, _
+from odoo.exceptions import ValidationError
 
 class Report(models.Model):
     _name = 'report'
@@ -23,6 +24,14 @@ class Report(models.Model):
                 record.is_not_completed = record.current_status.name.strip().lower() != 'completed'
             else:
                 record.is_not_completed = True
+
+    @api.constrains('current_status', 'to_work_on', 'expected_close_date')
+    def _check_incomplete_task_fields(self):
+        for record in self:
+            if record.current_status and record.current_status.name:
+                if record.current_status.name.strip().lower() != 'completed':
+                    if not record.to_work_on or not record.expected_close_date:
+                        raise ValidationError(_("For tasks not marked as 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory."))
 
 
 
