@@ -70,8 +70,8 @@
                                     <field name="time_taken" required="1"/>
                                     <field name="current_status" required="1"/>
                                     <field name="is_not_completed" invisible="1"/>
-                                    <field name="to_work_on" attrs="{'required': [('is_not_completed', '=', True)]}"/>
-                                    <field name="expected_close_date" attrs="{'required': [('is_not_completed', '=', True)]}"/>
+                                    <field name="to_work_on" attrs="{'required': [('is_not_completed', '=', True)], 'readonly': [('is_not_completed', '=', False)]}"/>
+                                    <field name="expected_close_date" attrs="{'required': [('is_not_completed', '=', True)], 'readonly': [('is_not_completed', '=', False)]}"/>
                                     <field name="remarks_if_any"/>
                                 </tree>
                             </field>
