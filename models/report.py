@@ -14,6 +14,12 @@ class Report(models.Model):
     remarks_if_any = fields.Char(string='Remarks If Any')
 
     employee_id = fields.Many2one('employee.report', string='Employee')
+    is_not_completed = fields.Boolean(compute='_compute_is_not_completed', store=True)
+
+    @api.depends('current_status')
+    def _compute_is_not_completed(self):
+        for record in self:
+            record.is_not_completed = record.current_status.name != 'Completed'
 
 
 
