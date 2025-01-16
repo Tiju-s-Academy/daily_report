@@ -4,12 +4,14 @@
         <field name="name">report.tree</field>
         <field name="model">report</field>
         <field name="arch" type="xml">
-            <tree string="Report">
+            <tree string="Report" decoration-danger="not expected_close_date and current_status.name != 'Completed'" 
+                  decoration-success="current_status.name == 'Completed'" 
+                  decoration-info="current_status.name == 'In Progress'">
                 <field name="project_id"/>
                 <field name="task_id"/>
                 <field name="activity"/>
                 <field name="time_taken"/>
-                <field name="current_status"/>
+                <field name="current_status" widget="badge"/>
                 <field name="expected_close_date"/>
                 <field name="to_work_on"/>
                 <field name="remarks_if_any"/>
