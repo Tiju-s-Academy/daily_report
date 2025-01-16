@@ -28,16 +28,16 @@ class EmployeeReport(models.Model):
     def _compute_total_work_hours(self):
         for record in self:
             if record.name and record.name.resource_calendar_id:
-                # Get the total hours per day as a float
-                hours_per_day = record.name.resource_calendar_id.hours_per_day
-                # Convert the float to hours and minutes format
-                hours = int(hours_per_day)
-                minutes = round((hours_per_day - hours) * 60)
-                # Format as HH:MM
-                record.total_work_hours = f'{hours:02}:{minutes:02}'
+                try:
+                    hours_per_day = float(record.name.resource_calendar_id.hours_per_day)
+                    hours = int(hours_per_day)
+                    minutes = int((hours_per_day - hours) * 60)
+                    record.total_work_hours = f'{hours:02d}:{minutes:02d}'
+                except (ValueError, TypeError):
+                    record.total_work_hours = '00:00'
             else:
-                # If no value is found, set it to 0:00
                 record.total_work_hours = '00:00'
+
     actual_work_hours = fields.Char(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
     #
     @api.depends('report_ids.task_id', 'report_ids.time_taken')

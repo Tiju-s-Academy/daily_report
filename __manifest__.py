@@ -13,6 +13,7 @@
         'views/report_view.xml',
         'views/employee_report_view.xml',
         'views/daily_report_menu.xml',
+        'data/job_status_data.xml',
     ],
     'application': True,
     'license': 'LGPL-3',
