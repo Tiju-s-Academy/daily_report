@@ -44,25 +44,25 @@ class EmployeeReport(models.Model):
     def _compute_actual_work_hours(self):
         for record in self:
             total_minutes = 0
-            # Validate time_taken format as HH:MM
             for report in record.report_ids:
                 if report.time_taken:
-                    # Check if time_taken matches the format HH:MM
-                    if not re.match(r'^\d{1,2}:\d{2}$', str(report.time_taken)):
-                        raise ValidationError(_("Time must be in HH:MM format."))
-            for time_str in record.report_ids.mapped('time_taken'):
-                if time_str:
-                    # Split the time string into hours and minutes
-                    hours, minutes = map(int, time_str.split(':'))
-                    total_minutes += hours * 60 + minutes
+                    # Improved time format validation
+                    if re.match(r'^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', report.time_taken):
+                        hours, minutes = map(int, report.time_taken.split(':'))
+                        total_minutes += hours * 60 + minutes
+                    else:
+                        continue  # Skip invalid formats instead of raising error
 
             # Convert total minutes back to HH:MM format
             hours, minutes = divmod(total_minutes, 60)
-            record.actual_work_hours = f"{hours:02}:{minutes:02}"
-            print(record.actual_work_hours)
-            print(type(record.actual_work_hours))
-            print(record.total_work_hours)
-            print(type(record.total_work_hours))
+            record.actual_work_hours = f"{hours:02d}:{minutes:02d}"
+
+    @api.constrains('report_ids.time_taken')
+    def _check_time_format(self):
+        for record in self:
+            for report in record.report_ids:
+                if report.time_taken and not re.match(r'^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$', report.time_taken):
+                    raise ValidationError(_("Time must be in HH:MM format (e.g., 02:00, 13:30)."))
 
     prepared_by = fields.Many2one('hr.employee', string="Prepared By", default=lambda self: self.env.user.employee_id)
     approved_by = fields.Many2one('hr.employee', string="Approved By")
