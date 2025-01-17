@@ -35,20 +35,18 @@
             <form string="Employee Report">
                 <field name="is_manager" invisible="1"/>
                 <header>
-                    <button name="action_submit" string="Submit" type="object" invisible="state !='draft'"
+                    <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
                             class="oe_highlight btn-primary"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            invisible="not is_manager or state == 'approved'"/>
+                            invisible="not is_manager or state != 'submitted'"/>
                     <button name="action_reject" string="Reject" type="object" class="btn-danger"
-                            invisible="not is_manager or state == 'rejected'"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected" 
+                            invisible="not is_manager or state != 'submitted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"
                            statusbar_colors='{"draft":"blue","submitted":"orange","approved":"green","rejected":"red"}'/>
                 </header>
                 <sheet>
                     <widget name="web_ribbon" title="Approved" bg_color="bg-success"
                             invisible="state != 'approved'"/>
-                    <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
-                            invisible="state != 'rejected'"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name" required="1" placeholder="Employee Name"/>

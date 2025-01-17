@@ -4,7 +4,7 @@
               name="DWR"
               web_icon="daily_report,static/description/icon.png"/>
     <menuitem id="menu_employee_report"
-              name="Employee Report"
+              name="Daily Work Report"
               parent="menu_daily_report_root"
               sequence="1"
               action="action_employee_report"/>

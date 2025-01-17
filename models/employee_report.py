@@ -75,8 +75,7 @@ class EmployeeReport(models.Model):
     prepared_by = fields.Many2one('hr.employee', string="Prepared By", default=lambda self: self.env.user.employee_id)
     approved_by = fields.Many2one('hr.employee', string="Approved By")
     date = fields.Date(string='Date',default=fields.Date.today,readonly=True)
-    state = fields.Selection([('draft', 'Draft'),('submitted','Submitted'), ('approved', 'Approved'),
-                              ('rejected', 'Rejected')], string='Status', default='draft',tracking=True)
+    state = fields.Selection([('draft', 'Draft'),('submitted','Submitted'), ('approved', 'Approved')], string='Status', default='draft',tracking=True)
     is_manager = fields.Boolean(string="Is Manager",compute="_compute_is_manager",store=False)
 
     is_half_day = fields.Boolean(string="Half day report",compute="_compute_is_half_day")
@@ -146,7 +145,7 @@ class EmployeeReport(models.Model):
             }
         }
     def action_reject(self):
-        self.state = 'rejected'
+        self.state = 'draft'
         activity_ids = self.activity_ids
         if activity_ids:
             activity_ids.unlink()
