@@ -71,7 +71,7 @@
                                       decoration-info="current_status.name == 'In Progress'" 
                                       decoration-warning="current_status.name not in ['Completed', 'In Progress']">
                                     <field name="project_id" required="1"/>
-                                    <field name="task_id" required="1"/>
+                                    <field name="task_id"/>
                                     <field name="activity"/>
                                     <field name="time_taken" required="1"/>
                                     <field name="current_status" required="1"/>

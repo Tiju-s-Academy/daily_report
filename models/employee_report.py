@@ -1,6 +1,8 @@
-from odoo import api, fields, models,_
-from odoo.exceptions import ValidationError
 import re
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
+
 
 class EmployeeReport(models.Model):
     _name = 'employee.report'
@@ -20,7 +22,11 @@ class EmployeeReport(models.Model):
             else:
                 record.branch_id = False
 
-    report_ids = fields.One2many('report', 'employee_id', string="Daily Report")
+    def _default_report_ids(self):
+        return [(0, 0, {'project_id': 'Refreshment', 'activity': 'Interval', 'time_taken': '00:30',
+                        'current_status': self.env['job.status'].search([('name', '=', 'Completed')], limit=1).id})]
+
+    report_ids = fields.One2many('report', 'employee_id', string="Daily Report", default=_default_report_ids)
 
     total_work_hours = fields.Char(string='Total Work Hours', compute='_compute_total_work_hours', store=True)
 
@@ -151,6 +157,8 @@ class EmployeeReport(models.Model):
             activity_ids.unlink()
 
     summary = fields.Html(string="Summary",store=True)
+
+    
 
 
 
