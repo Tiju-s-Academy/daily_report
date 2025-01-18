@@ -67,11 +67,11 @@
                     <notebook>
                         <page string="Daily Tasks" name="daily_tasks">
                             <field name="report_ids" readonly="state !='draft'" mode="tree">
-                                <tree editable="bottom" decoration-success="current_status.name == 'Completed'" 
-                                      decoration-info="current_status.name == 'In Progress'" 
+                                <tree editable="bottom" decoration-success="current_status.name == 'Completed'"
+                                      decoration-info="current_status.name == 'In Progress'"
                                       decoration-warning="current_status.name not in ['Completed', 'In Progress']">
                                     <field name="project_id" required="1"/>
-                                    <field name="task_id"/>
+                                    <field name="task_id" required="1"/>
                                     <field name="activity"/>
                                     <field name="time_taken" required="1"/>
                                     <field name="current_status" required="1"/>

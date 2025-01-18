@@ -1,5 +1,6 @@
 import re
-
+from datetime import date
+import calendar
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
@@ -23,8 +24,27 @@ class EmployeeReport(models.Model):
                 record.branch_id = False
 
     def _default_report_ids(self):
-        return [(0, 0, {'project_id': 'Refreshment', 'activity': 'Interval', 'time_taken': '00:30',
-                        'current_status': self.env['job.status'].search([('name', '=', 'Completed')], limit=1).id})]
+        # Get today's date
+        today = date.today()
+
+        # Check if today is 1st or 3rd Saturday
+        if today.weekday() == calendar.SATURDAY:  # Check if today is Saturday
+            month_calendar = calendar.Calendar()
+            saturdays = [
+                day for day in month_calendar.itermonthdays2(today.year, today.month)
+                if day[0] != 0 and day[1] == calendar.SATURDAY
+            ]
+            if (today.day == saturdays[0][0] or (len(saturdays) > 2 and today.day == saturdays[2][0])):
+                # Return an empty list if it's the 1st or 3rd Saturday
+                return []
+
+        # Default values if not 1st or 3rd Saturday
+        return [(0, 0, {
+            'project_id': 'Refreshment',
+            'activity': 'Interval',
+            'time_taken': '00:30',
+            'current_status': self.env['job.status'].search([('name', '=', 'Completed')], limit=1).id
+        })]
 
     report_ids = fields.One2many('report', 'employee_id', string="Daily Report", default=_default_report_ids)
 
@@ -35,8 +55,25 @@ class EmployeeReport(models.Model):
         for record in self:
             if record.name and record.name.resource_calendar_id:
                 hours_per_day = record.name.resource_calendar_id.hours_per_day
+
+                # Get today's date
+                today = date.today()
+
+                # Check if today is 1st or 3rd Saturday
+                if today.weekday() == calendar.SATURDAY:  # Check if today is Saturday
+                    month_calendar = calendar.Calendar()
+                    saturdays = [
+                        day for day in month_calendar.itermonthdays2(today.year, today.month)
+                        if day[0] != 0 and day[1] == calendar.SATURDAY
+                    ]
+                    if (today.day == saturdays[0][0] or (len(saturdays) > 2 and today.day == saturdays[2][0])):
+                        hours_per_day = record.name.resource_calendar_id.hours_per_day / 2.0  # Apply half-day rule
+
+                # Apply half-day flag
                 if record.is_half_day:
-                    hours_per_day = hours_per_day / 2.0
+                    hours_per_day = record.name.resource_calendar_id.hours_per_day / 2.0
+
+                # Compute total work hours
                 hours = int(hours_per_day)
                 minutes = int((hours_per_day - hours) * 60)
                 record.total_work_hours = f"{hours:02d}:{minutes:02d}"
