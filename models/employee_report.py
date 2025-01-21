@@ -98,16 +98,16 @@ class EmployeeReport(models.Model):
             hours, minutes = divmod(total_minutes, 60)
             record.actual_work_hours = f"{hours:02d}:{minutes:02d}"
 
-    def _compare_time_strings(self, time1, time2):
-        """Compare two time strings in HH:MM format"""
-        if not time1 or not time2:
-            return False
-        try:
-            h1, m1 = map(int, time1.split(':'))
-            h2, m2 = map(int, time2.split(':'))
-            return (h1 * 60 + m1) < (h2 * 60 + m2)
-        except (ValueError, AttributeError):
-            return False
+    # def _compare_time_strings(self, time1, time2):
+    #     """Compare two time strings in HH:MM format"""
+    #     if not time1 or not time2:
+    #         return False
+    #     try:
+    #         h1, m1 = map(int, time1.split(':'))
+    #         h2, m2 = map(int, time2.split(':'))
+    #         return (h1 * 60 + m1) < (h2 * 60 + m2)
+    #     except (ValueError, AttributeError):
+    #         return False
 
     @api.constrains('report_ids.time_taken')
     def _check_time_format(self):
@@ -163,8 +163,8 @@ class EmployeeReport(models.Model):
                 if not report.to_work_on or not report.expected_close_date:
                     raise ValidationError(_("For task '%s': When status is not 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory.") % report.task_id)
 
-        if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
-            raise ValidationError(_("The Total work hours should be achieved by the employee."))
+        # if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
+        #     raise ValidationError(_("The Total work hours should be achieved by the employee."))
 
         self.state = 'submitted'
         self.prepared_by = self.env.user.employee_id.id
