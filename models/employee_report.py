@@ -2,13 +2,14 @@ import re
 from datetime import date
 import calendar
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError,UserError
 
 
 class EmployeeReport(models.Model):
     _name = 'employee.report'
     _description = 'Employee Report'
     _inherit = ['mail.thread','mail.activity.mixin']
+
 
     name = fields.Many2one('hr.employee', string="Employee",default=lambda self: self.env.user.employee_id,readonly=True)
     department_id = fields.Many2one('hr.department', string="Department",default=lambda self: self.env.user.employee_id.department_id,readonly=True)
@@ -164,7 +165,7 @@ class EmployeeReport(models.Model):
 
         if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
             raise ValidationError(_("The Total work hours should be achieved by the employee."))
-        
+
         self.state = 'submitted'
         self.prepared_by = self.env.user.employee_id.id
         manager = self.name.parent_id
@@ -175,6 +176,9 @@ class EmployeeReport(models.Model):
             )
 
     def action_approve(self):
+        today = fields.Date.today()
+        if self.date != today:
+            raise UserError(_("You can only approve today's Reports"))
         self.state = 'approved'
         self.approved_by = self.env.user.employee_id.id
         activity_ids = self.activity_ids
@@ -188,12 +192,17 @@ class EmployeeReport(models.Model):
             }
         }
     def action_reject(self):
-        self.state = 'draft'
-        activity_ids = self.activity_ids
-        if activity_ids:
-            activity_ids.unlink()
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Reason'),
+            'res_model': 'report.reject.wizard',
+            'target': 'new',
+            'view_mode': 'form',
+            'context': {'default_employee_report_id': self.id},
+        }
 
     summary = fields.Html(string="Summary",store=True)
+    reject_reason = fields.Text(string='Reason',tracking=True)
 
     
 

@@ -5,6 +5,7 @@ class Report(models.Model):
     _name = 'report'
     _description = 'Report'
 
+    sequence = fields.Integer(string="Sequence", default=10)
     project_id = fields.Char(string='Project | Objectives')
     task_id = fields.Char(string='Task')
     activity = fields.Char(string='Activities')

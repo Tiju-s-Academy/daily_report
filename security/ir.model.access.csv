@@ -8,3 +8,6 @@ access_job_status_user,job status user,model_job_status,user_report,1,1,0,0
 access_report_user,report user,model_report,user_report,1,1,1,1
 access_employee_report_user,employee report user,model_employee_report,user_report,1,1,1,0
 
+access_reject_wizard_admin,report reject admin,model_report_reject_wizard,admin_report,1,1,1,1
+access_reject_wizard_user,report reject user,model_report_reject_wizard,user_report,1,1,1,0
+
