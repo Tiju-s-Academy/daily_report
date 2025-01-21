@@ -157,8 +157,11 @@ class EmployeeReport(models.Model):
                 raise ValidationError(_("An employee can only submit one report per day."))
 
     def action_submit(self):
+        today = fields.Date.today()
         # Validate incomplete tasks
         for report in self.report_ids:
+            if self.date != today:
+                raise ValidationError(_("Previous Record Can not submit Today"))
             if report.current_status.name.strip().lower() != 'completed':
                 if not report.to_work_on or not report.expected_close_date:
                     raise ValidationError(_("For task '%s': When status is not 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory.") % report.task_id)
