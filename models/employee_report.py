@@ -127,7 +127,7 @@ class EmployeeReport(models.Model):
 
     @api.depends('name')
     def _compute_is_half_day(self):
-    
+
         today = fields.Date.today()
         leave = self.env['hr.leave'].sudo().search([
             ('employee_id', '=', self.name.id),  # For the specific employee
@@ -182,8 +182,6 @@ class EmployeeReport(models.Model):
         today = fields.Date.today()
         print("check",self.env.user.has_group('daily_report.directors_report'))
         if self.is_director:
-            if self.date != today:
-                raise UserError(_("You can only approve today's Reports"))
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
             activity_ids = self.activity_ids
@@ -218,8 +216,6 @@ class EmployeeReport(models.Model):
         today = fields.Date.today()
         print("check", self.env.user.has_group('daily_report.directors_report'))
         if self.is_director:
-            if self.date != today:
-                raise UserError(_("You can only approve today's Reports"))
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Reason'),
