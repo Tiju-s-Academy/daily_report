@@ -37,10 +37,8 @@
                 <header>
                     <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
                             class="oe_highlight btn-primary"/>
-                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
-                            invisible="not is_manager or state != 'submitted'"/>
-                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
-                            invisible="not is_manager or state != 'submitted'"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state !='submitted'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="state !='submitted'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"
                            statusbar_colors='{"draft":"blue","submitted":"orange","approved":"green","rejected":"red"}'/>
                 </header>

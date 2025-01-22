@@ -123,10 +123,11 @@ class EmployeeReport(models.Model):
     is_manager = fields.Boolean(string="Is Manager",compute="_compute_is_manager",store=False)
 
     is_half_day = fields.Boolean(string="Half day report",compute="_compute_is_half_day")
+    is_director = fields.Boolean(string='Is Director',compute="_compute_is_manager",store=True)
 
     @api.depends('name')
     def _compute_is_half_day(self):
-        print("half day check")
+    
         today = fields.Date.today()
         leave = self.env['hr.leave'].sudo().search([
             ('employee_id', '=', self.name.id),  # For the specific employee
@@ -141,12 +142,11 @@ class EmployeeReport(models.Model):
             self.is_half_day = False
 
 
-
-
     @api.depends('name', 'name.parent_id')
     def _compute_is_manager(self):
         for record in self:
             record.is_manager = record.name.parent_id.user_id == self.env.user
+            record.is_director=self.env.user.has_group('daily_report.directors_report')
 
 
 
@@ -180,29 +180,67 @@ class EmployeeReport(models.Model):
 
     def action_approve(self):
         today = fields.Date.today()
-        if self.date != today:
-            raise UserError(_("You can only approve today's Reports"))
-        self.state = 'approved'
-        self.approved_by = self.env.user.employee_id.id
-        activity_ids = self.activity_ids
-        if activity_ids:
-            activity_ids.unlink()
-        return {
-            'effect': {
-                'fadeout': 'slow',
-                'message': 'Approved',
-                'type': 'rainbow_man',
+        print("check",self.env.user.has_group('daily_report.directors_report'))
+        if self.is_director:
+            if self.date != today:
+                raise UserError(_("You can only approve today's Reports"))
+            self.state = 'approved'
+            self.approved_by = self.env.user.employee_id.id
+            activity_ids = self.activity_ids
+            if activity_ids:
+                activity_ids.unlink()
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': 'Approved',
+                    'type': 'rainbow_man',
+                }
             }
-        }
+        elif self.is_manager:
+            if self.date != today:
+                raise UserError(_("You can only approve today's Reports"))
+            self.state = 'approved'
+            self.approved_by = self.env.user.employee_id.id
+            activity_ids = self.activity_ids
+            if activity_ids:
+                activity_ids.unlink()
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': 'Approved',
+                    'type': 'rainbow_man',
+                }
+            }
+        else:
+            raise ValidationError(_("You are not a Manger of the employee or Director"))
+
     def action_reject(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'name': _('Reason'),
-            'res_model': 'report.reject.wizard',
-            'target': 'new',
-            'view_mode': 'form',
-            'context': {'default_employee_report_id': self.id},
-        }
+        today = fields.Date.today()
+        print("check", self.env.user.has_group('daily_report.directors_report'))
+        if self.is_director:
+            if self.date != today:
+                raise UserError(_("You can only approve today's Reports"))
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Reason'),
+                'res_model': 'report.reject.wizard',
+                'target': 'new',
+                'view_mode': 'form',
+                'context': {'default_employee_report_id': self.id},
+            }
+        elif self.is_manager:
+            if self.date != today:
+                raise UserError(_("You can only approve today's Reports"))
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Reason'),
+                'res_model': 'report.reject.wizard',
+                'target': 'new',
+                'view_mode': 'form',
+                'context': {'default_employee_report_id': self.id},
+            }
+        else:
+            raise ValidationError(_("You are not a Manger of the employee or Director"))
 
     summary = fields.Html(string="Summary",store=True)
     reject_reason = fields.Text(string='Reason',tracking=True)
