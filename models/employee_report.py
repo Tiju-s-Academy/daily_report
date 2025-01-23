@@ -171,12 +171,12 @@ class EmployeeReport(models.Model):
 
         self.state = 'submitted'
         self.prepared_by = self.env.user.employee_id.id
-        manager = self.name.parent_id
-        if manager:
-            self.activity_schedule(
-                'daily_report.mail_activity_work_log',
-                user_id=manager.user_id.id,
-            )
+        # manager = self.name.parent_id
+        # if manager:
+        #     self.activity_schedule(
+        #         'daily_report.mail_activity_work_log',
+        #         user_id=manager.user_id.id,
+        #     )
 
     def action_approve(self):
         today = fields.Date.today()
