@@ -184,9 +184,9 @@ class EmployeeReport(models.Model):
         if self.is_director:
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
-            # activity_ids = self.activity_ids
-            # if activity_ids:
-            #     activity_ids.unlink()
+            activity_ids = self.activity_ids
+            if activity_ids:
+                activity_ids.unlink()
             return {
                 'effect': {
                     'fadeout': 'slow',
@@ -199,9 +199,9 @@ class EmployeeReport(models.Model):
                 raise UserError(_("You can only approve today's Reports"))
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
-            # activity_ids = self.activity_ids
-            # if activity_ids:
-            #     activity_ids.unlink()
+            activity_ids = self.activity_ids
+            if activity_ids:
+                activity_ids.unlink()
             return {
                 'effect': {
                     'fadeout': 'slow',
