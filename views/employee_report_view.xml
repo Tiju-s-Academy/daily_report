@@ -4,12 +4,14 @@
         <field name="name">employee.report.tree</field>
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
-            <tree string="Employee Reports" decoration-info="state == 'draft'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'">
+            <tree string="Employee Reports" decoration-info="state == 'draft'" decoration-success="state == 'approved'"
+                  decoration-danger="state == 'rejected'">
                 <field name="name"/>
                 <field name="department_id"/>
                 <field name="summary"/>
                 <field name="date"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                       decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
             </tree>
         </field>
     </record>
@@ -18,8 +20,10 @@
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
             <search string="Employee Reports">
-                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>
-                <filter string="My Team" name="my_team" domain="[('name.parent_id.user_id', '=', uid)]"/>
+                <!-- Removed default attribute to avoid setting "For Me" as the default filter -->
+<!--                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>-->
+<!--                <filter string="My Team" name="my_team"-->
+<!--                        domain="[('name.parent_id.user_id', '=', uid),('state', '=', 'submitted')]"/>-->
                 <filter string="Today's Report" name="today_report" domain="[('date', '=', context_today())]"/>
                 <field name="name"/>
                 <field name="department_id"/>
@@ -27,6 +31,7 @@
             </search>
         </field>
     </record>
+
 
     <record id="view_employee_report_form" model="ir.ui.view">
         <field name="name">employee.report.form</field>
@@ -37,8 +42,10 @@
                 <header>
                     <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
                             class="oe_highlight btn-primary"/>
-                    <button name="action_approve" string="Approve" type="object" class="oe_highlight" invisible="state !='submitted'"/>
-                    <button name="action_reject" string="Reject" type="object" class="btn-danger" invisible="state !='submitted'"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            invisible="state !='submitted'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                            invisible="state !='submitted'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"
                            statusbar_colors='{"draft":"blue","submitted":"orange","approved":"green","rejected":"red"}'/>
                 </header>
@@ -100,17 +107,26 @@
             </form>
         </field>
     </record>
-    <record id="action_employee_report" model="ir.actions.act_window">
+    <record id="action_my_employee_report" model="ir.actions.act_window">
         <field name="name">Employee Reports</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
-        <field name="context">{'search_default_for_me': 1}</field>
-        <field name="search_view_id" ref="view_employee_report_search"/>
+        <field name="domain">[('create_uid', '=', uid)]</field>
         <field name="help" type="html">
             <p>
                 Use this view to manage and track employee reports.
             </p>
         </field>
     </record>
-
+    <record id="action_employees_report" model="ir.actions.act_window">
+        <field name="name">Employees Report</field>
+        <field name="res_model">employee.report</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('create_uid', '!=', uid),('state', '!=', 'draft')]</field>
+        <field name="help" type="html">
+            <p>
+                This view shows all employees' reports except draft state.
+            </p>
+        </field>
+    </record>
 </odoo>
