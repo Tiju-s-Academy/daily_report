@@ -18,14 +18,14 @@ class ReportRejectWizard(models.Model):
                 'reject_reason': self.description,
                 'state': 'draft',
             })
-            activities = self.env['mail.activity'].search([
-                ('res_id', '=', self.employee_report_id.id),
-                ('res_model', '=', 'employee.report'),
-            ])
+            # activities = self.env['mail.activity'].search([
+            #     ('res_id', '=', self.employee_report_id.id),
+            #     ('res_model', '=', 'employee.report'),
+            # ])
 
             # Unlink the activities
-            if activities:
-                activities.unlink()
+            # if activities:
+            #     activities.unlink()
 
             return {
                 'type': 'ir.actions.client',
