@@ -6,7 +6,8 @@
     <menuitem id="menu_employee_report"
               name="Daily Work Report"
               parent="menu_daily_report_root"
-              sequence="1"/>
+              sequence="1"
+              action="action_employees_report"/>
     <menuitem id="my_report"
               name="My Report"
               parent="menu_employee_report"

@@ -119,7 +119,7 @@
         </field>
     </record>
     <record id="action_employees_report" model="ir.actions.act_window">
-        <field name="name">Employees Report</field>
+        <field name="name">All Employees Report</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('create_uid', '!=', uid),('state', '!=', 'draft')]</field>
