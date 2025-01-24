@@ -13,7 +13,7 @@
               parent="menu_employee_report"
               action="action_my_employee_report"/>
     <menuitem id="employee_report"
-              name="All Employees Report"
+              name="My Team's Report"
               parent="menu_employee_report"
               action="action_employees_report"/>
 <!-- <menuitem id="menu_report"
