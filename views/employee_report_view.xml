@@ -21,9 +21,9 @@
         <field name="arch" type="xml">
             <search string="Employee Reports">
                 <!-- Removed default attribute to avoid setting "For Me" as the default filter -->
-<!--                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>-->
-<!--                <filter string="My Team" name="my_team"-->
-<!--                        domain="[('name.parent_id.user_id', '=', uid),('state', '=', 'submitted')]"/>-->
+                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>
+                <filter string="My Team" name="my_team"
+                        domain="[('name.parent_id.user_id', '=', uid),('state', '=', 'submitted')]"/>
                 <filter string="Today's Report" name="today_report" domain="[('date', '=', context_today())]"/>
                 <field name="name"/>
                 <field name="department_id"/>
@@ -107,22 +107,22 @@
             </form>
         </field>
     </record>
-    <record id="action_my_employee_report" model="ir.actions.act_window">
-        <field name="name">Employee Reports</field>
-        <field name="res_model">employee.report</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('create_uid', '=', uid)]</field>
-        <field name="help" type="html">
-            <p>
-                Use this view to manage and track employee reports.
-            </p>
-        </field>
-    </record>
+<!--    <record id="action_my_employee_report" model="ir.actions.act_window">-->
+<!--        <field name="name">Employee Reports</field>-->
+<!--        <field name="res_model">employee.report</field>-->
+<!--        <field name="view_mode">tree,form</field>-->
+<!--        <field name="domain">[('create_uid', '=', uid)]</field>-->
+<!--        <field name="help" type="html">-->
+<!--            <p>-->
+<!--                Use this view to manage and track employee reports.-->
+<!--            </p>-->
+<!--        </field>-->
+<!--    </record>-->
     <record id="action_employees_report" model="ir.actions.act_window">
-        <field name="name">My Teams Report</field>
+        <field name="name">Employee Report</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
-        <field name="domain">[('create_uid', '!=', uid),('state', '!=', 'draft')]</field>
+<!--        <field name="domain">[('create_uid', '!=', uid),('state', '!=', 'draft')]</field>-->
         <field name="help" type="html">
             <p>
                 This view shows all employees' reports except draft state.
