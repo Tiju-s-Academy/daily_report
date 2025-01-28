@@ -22,7 +22,7 @@
         <field name="domain_force">
             [
                 ('name.parent_id.user_id', '=', user.id),
-                ('state','=','submitted')
+                ('state','!=','draft')
             ]
         </field>
     </record>
