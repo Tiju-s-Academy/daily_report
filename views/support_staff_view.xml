@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="support_staff_view_tree" model="ir.ui.view">
+        <field name="name">support.staff.view.tree</field>
+        <field name="model">support.staff</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="department_id"/>
+                <field name="summary"/>
+                <field name="date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <record id="support_staff_view_form" model="ir.ui.view">
+        <field name="name">support.staff.view.form</field>
+        <field name="model">support.staff</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="is_manager" invisible="1"/>
+                <field name="is_director" invisible="1"/>
+                <header>
+                    <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
+                            class="oe_highlight btn-primary"/>
+                    <button name="action_approve" string="Approve" type="object" class="oe_highlight"
+                            invisible="state !='submitted'"/>
+                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                            invisible="state !='submitted'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"
+                           statusbar_colors='{"draft":"blue","submitted":"orange","approved":"green","rejected":"red"}'/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Approved" bg_color="bg-success"
+                            invisible="state != 'approved'"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" options="{'no_open': True}" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="department_id"/>
+                            <field name="start_time"/>
+                            <field name="total_work_hours"/>
+                        </group>
+                        <group>
+                            <field name="branch_id"/>
+                            <field name="end_time"/>
+                            <field name="date" readonly="not is_director"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="today_report" string="Today Work">
+                            <field name="today_wrk_support_ids">
+                                <tree editable="bottom">
+                                    <field name="name" required="1"/>
+                                    <field name="time_taken" required="1"/>
+                                    <field name="current_status" required="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Pending Work" name="pending_work">
+                            <field name="yesterday_wrk_support_ids" mode="tree">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="time_taken"/>
+                                    <field name="current_status"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page name="balance_report" string="Balance Work">
+                            <field name="balance_wrk_support_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="time_taken"/>
+                                    <field name="current_status"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                    <group>
+                        <group>
+
+                            <field name="summary" class="oe_inline" placeholder="Enter summary here..."/>
+                        </group>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="prepared_by"  options="{'no_open': True}" readonly="1"/>
+                        </group>
+                        <group>
+
+                            <field name="approved_by" options="{'no_open': True}" readonly="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="support_staff_action" model="ir.actions.act_window">
+        <field name="name">Support Staff</field>
+        <field name="res_model">support.staff</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

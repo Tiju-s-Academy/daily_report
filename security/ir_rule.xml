@@ -21,10 +21,31 @@
         <field name="groups" eval="[(4, ref('user_report'))]"/>
         <field name="domain_force">
             [
-                '|',
-                ('create_uid', '=', user.id),
-                ('name.parent_id.user_id', '=', user.id)
+                ('name.parent_id.user_id', '=', user.id),
+                ('state','=','submitted')
+            ]
+        </field>
+    </record>
+    <record id="rule_support_staff_report" model="ir.rule">
+        <field name="name">Support Staff: See Own and Managed Records</field>
+        <field name="model_id" ref="model_support_staff"/>
+        <field name="groups" eval="[(4, ref('support_staff_manger'))]"/>
+        <field name="domain_force">
+            [
+                ('name.parent_id.user_id', '=', user.id),
+                ('state','=','submitted')
+            ]
+        </field>
+    </record>
+    <record id="rule_staff_manger" model="ir.rule">
+        <field name="name">Support Staff: See Own and Managed Records</field>
+        <field name="model_id" ref="model_support_staff"/>
+        <field name="groups" eval="[(4, ref('support_staff_report'))]"/>
+        <field name="domain_force">
+            [
+                ('create_uid', '=', user.id)
             ]
         </field>
     </record>
 </odoo>
+

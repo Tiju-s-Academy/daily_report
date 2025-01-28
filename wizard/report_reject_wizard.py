@@ -7,9 +7,11 @@ class ReportRejectWizard(models.Model):
 
     description = fields.Text(string="Reason",required=True)
     employee_report_id = fields.Many2one('employee.report', string='Employee Report', readonly=True)
+    staff_report_id = fields.Many2one('support.staff',string='Staff Report',readonly=True)
 
     def action_reject_report(self):
         if self.employee_report_id:
+            print("its employee work")
             today = fields.Date.today()
             print("hellooo")
             if self.employee_report_id.date != today:
@@ -18,19 +20,36 @@ class ReportRejectWizard(models.Model):
                 'reject_reason': self.description,
                 'state': 'draft',
             })
-            activities = self.env['mail.activity'].search([
-                ('res_id', '=', self.employee_report_id.id),
-                ('res_model', '=', 'employee.report'),
-            ])
+            # activities = self.env['mail.activity'].search([
+            #     ('res_id', '=', self.employee_report_id.id),
+            #     ('res_model', '=', 'employee.report'),
+            # ])
 
             # Unlink the activities
-            if activities:
-                activities.unlink()
+            # if activities:
+            #     activities.unlink()
 
-            return {
-                'type': 'ir.actions.client',
-                'tag': 'reload',
-            }
+            # return {
+            #     'type': 'ir.actions.client',
+            #     'tag': 'reload',
+            # }
+        if self.staff_report_id:
+            print("its support work")
+            today = fields.Date.today()
+            print("hellooo")
+            if self.staff_report_id.date != today:
+                raise UserError(_("You can only reject today's Reports"))
+            self.staff_report_id.write({
+                'reject_reason': self.description,
+                'state': 'draft',
+            })
+            # return {
+            #     'type': 'ir.actions.client',
+            #     'tag': 'reload',
+            # }
+
+
+
 
 
 

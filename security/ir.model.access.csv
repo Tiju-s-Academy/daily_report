@@ -13,3 +13,16 @@ access_employee_report_user,employee report user,model_employee_report,user_repo
 
 access_reject_wizard_admin,report reject admin,model_report_reject_wizard,admin_report,1,1,1,1
 access_reject_wizard_user,report reject user,model_report_reject_wizard,user_report,1,1,1,0
+
+
+access_yesterday_report,yesterday report,model_yesterday_wrk_support,,1,1,1,1
+access_today_report,today report,model_today_wrk_support,,1,1,1,1
+access_balance_report,balance report,model_balance_wrk_support,,1,1,1,1
+
+access_support_staff_support_manager,support staff manager,model_support_staff,support_staff_manger,1,1,0,0
+access_support_staff_support_staff,support staff user,model_support_staff,support_staff_report,1,1,1,0
+access_support_staff_directors,support staff directors,model_support_staff,directors_report,1,1,1,0
+access_support_staff_admin,support staff admin,model_support_staff,admin_report,1,1,1,1
+access_job_status_support_staff_report,job status support_staff_report,model_job_status,support_staff_report,1,1,0,0
+
+access_reject_wizard_staff_manager,report reject staff manager,model_report_reject_wizard,support_staff_manger,1,1,1,0

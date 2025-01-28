@@ -17,6 +17,14 @@
         <field name="name">user</field>
         <field name="category_id" ref="report_group"/>
     </record>
+    <record id="support_staff_manger" model="res.groups">
+        <field name="name">Support Staff Manger</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
+    <record id="support_staff_report" model="res.groups">
+        <field name="name">Support Staff</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
 </odoo>
 
 

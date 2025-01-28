@@ -20,10 +20,9 @@
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
             <search string="Employee Reports">
-                <!-- Removed default attribute to avoid setting "For Me" as the default filter -->
-                <filter string="For Me" name="for_me" domain="[('create_uid', '=', uid)]"/>
+                <filter string="My Report" name="my_report" domain="[('create_uid', '=', uid)]"/>
                 <filter string="My Team" name="my_team"
-                        domain="[('name.parent_id.user_id', '=', uid),('state', '=', 'submitted')]"/>
+                        domain="[('name.parent_id.user_id', '=', uid),('state','=','submitted')]"/>
                 <filter string="Today's Report" name="today_report" domain="[('date', '=', context_today())]"/>
                 <field name="name"/>
                 <field name="department_id"/>
@@ -32,13 +31,13 @@
         </field>
     </record>
 
-
     <record id="view_employee_report_form" model="ir.ui.view">
         <field name="name">employee.report.form</field>
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
             <form string="Employee Report">
                 <field name="is_manager" invisible="1"/>
+                <field name="is_director" invisible="1"/>
                 <header>
                     <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
                             class="oe_highlight btn-primary"/>
@@ -54,7 +53,7 @@
                             invisible="state != 'approved'"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" required="1" placeholder="Employee Name"/>
+                            <field name="name" required="1" placeholder="Employee Name" options="{'no_open': True}"/>
                         </h1>
                     </div>
                     <group>
@@ -66,7 +65,7 @@
                         <group>
                             <field name="branch_id"/>
                             <field name="actual_work_hours"/>
-                            <field name="date"/>
+                            <field name="date" readonly="not is_director"/>
                         </group>
                     </group>
                     <notebook>
@@ -107,26 +106,9 @@
             </form>
         </field>
     </record>
-<!--    <record id="action_my_employee_report" model="ir.actions.act_window">-->
-<!--        <field name="name">Employee Reports</field>-->
-<!--        <field name="res_model">employee.report</field>-->
-<!--        <field name="view_mode">tree,form</field>-->
-<!--        <field name="domain">[('create_uid', '=', uid)]</field>-->
-<!--        <field name="help" type="html">-->
-<!--            <p>-->
-<!--                Use this view to manage and track employee reports.-->
-<!--            </p>-->
-<!--        </field>-->
-<!--    </record>-->
-    <record id="action_employees_report" model="ir.actions.act_window">
-        <field name="name">Employee Report</field>
+    <record id="action_employee_report" model="ir.actions.act_window">
+        <field name="name">Employee Reports</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
-<!--        <field name="domain">[('create_uid', '!=', uid),('state', '!=', 'draft')]</field>-->
-        <field name="help" type="html">
-            <p>
-                This view shows all employees' reports except draft state.
-            </p>
-        </field>
     </record>
 </odoo>
