@@ -162,8 +162,9 @@ class EmployeeReport(models.Model):
         today = fields.Date.today()
         # Validate incomplete tasks
         for report in self.report_ids:
-            if self.date != today:
-                raise ValidationError(_("Previous Record Can not submit Today"))
+            if not self.is_director:
+                if self.date != today:
+                    raise ValidationError(_("Previous Record Can not submit Today"))
             if report.current_status.name.strip().lower() != 'completed':
                 if not report.to_work_on or not report.expected_close_date:
                     raise ValidationError(

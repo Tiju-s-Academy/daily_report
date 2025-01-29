@@ -90,10 +90,10 @@
                             </group>
                             <group>
                                 <group>
-                                    <field name="prepared_by" readonly="1"/>
+                                    <field name="prepared_by" options="{'no_open': True}" readonly="1"/>
                                 </group>
                                 <group>
-                                    <field name="approved_by" readonly="1"/>
+                                    <field name="approved_by" options="{'no_open': True}" readonly="1"/>
                                 </group>
                             </group>
                         </page>
