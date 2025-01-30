@@ -13,9 +13,9 @@ class SupportStaff(models.Model):
                                     default=lambda self: self.env.user.employee_id.department_id, readonly=True)
     branch_id = fields.Many2one('employee.branch', string="Branch", compute='_compute_branch_id', store=True)
 
-    start_time = fields.Float(string="Start Time",
+    start_time = fields.Char(string="Start Time",
                               help="Specify the start time in 24-hour format (e.g., 7.0 for 7:00 AM)")
-    end_time = fields.Float(string="End Time", help="Specify the end time in 24-hour format (e.g., 21.0 for 9:00 PM)")
+    end_time = fields.Char(string="End Time", help="Specify the end time in 24-hour format (e.g., 21.0 for 9:00 PM)")
 
     @api.depends('name')
     def _compute_branch_id(self):
@@ -92,8 +92,9 @@ class SupportStaff(models.Model):
             # Convert total minutes back to HH:MM format
             hours, minutes = divmod(total_minutes, 60)
             record.total_work_hours = f"{hours:02d}:{minutes:02d}"
-    summary = fields.Html(string="Summary", store=True)
-
+    summary1 = fields.Html(string="Summary", store=True)
+    summary2 = fields.Html(string="Summary", store=True)
+    summary3 = fields.Html(string="Summary", store=True)
 
 
     def action_submit(self):
@@ -111,6 +112,7 @@ class SupportStaff(models.Model):
         print("check", self.env.user.has_group('daily_report.directors_report'))
         if self.is_director:
             self.state = 'approved'
+            self.approved_by = self.env.user.employee_id.id
             return {
                 'effect': {
                     'fadeout': 'slow',
@@ -122,6 +124,7 @@ class SupportStaff(models.Model):
             if self.date != today:
                 raise UserError(_("You can only approve today's Reports"))
             self.state = 'approved'
+            self.approved_by = self.env.user.employee_id.id
             return {
                 'effect': {
                     'fadeout': 'slow',
@@ -132,29 +135,15 @@ class SupportStaff(models.Model):
         else:
             raise ValidationError(_("You are not a Manger of the employee or Director"))
 
-    def action_reject(self):
+    def action_rejection(self):
         today = fields.Date.today()
         print("check", self.env.user.has_group('daily_report.directors_report'))
         if self.is_director:
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Reason'),
-                'res_model': 'report.reject.wizard',
-                'target': 'new',
-                'view_mode': 'form',
-                'context': {'default_staff_report_id': self.id},
-            }
+            self.state = 'draft'
         elif self.is_manager:
             if self.date != today:
                 raise UserError(_("You can only approve today's Reports"))
-            return {
-                'type': 'ir.actions.act_window',
-                'name': _('Reason'),
-                'res_model': 'report.reject.wizard',
-                'target': 'new',
-                'view_mode': 'form',
-                'context': {'default_staff_report_id': self.id},
-            }
+            self.state = 'draft'
         else:
             raise ValidationError(_("You are not a Manger of the employee or Director"))
 

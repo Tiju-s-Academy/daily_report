@@ -7,7 +7,7 @@
             <tree>
                 <field name="name"/>
                 <field name="department_id"/>
-                <field name="summary"/>
+                <field name="summary2"/>
                 <field name="date"/>
                 <field name="state"/>
             </tree>
@@ -25,8 +25,9 @@
                             class="oe_highlight btn-primary"/>
                     <button name="action_approve" string="Approve" type="object" class="oe_highlight"
                             invisible="state !='submitted'"/>
-                    <button name="action_reject" string="Reject" type="object" class="btn-danger"
+                    <button name="action_rejection" string="Reject" type="object" class="btn-danger"
                             invisible="state !='submitted'"/>
+
                     <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"
                            statusbar_colors='{"draft":"blue","submitted":"orange","approved":"green","rejected":"red"}'/>
                 </header>
@@ -40,50 +41,49 @@
                     </div>
                     <group>
                         <group>
-                            <field name="department_id"/>
-                            <field name="start_time"/>
+                            <field name="department_id" options="{'no_open': True}" readonly="1"/>
+                            <field name="start_time" readonly="state !='draft'"/>
                             <field name="total_work_hours"/>
                         </group>
                         <group>
-                            <field name="branch_id"/>
-                            <field name="end_time"/>
+                            <field name="branch_id" options="{'no_open': True}" readonly="1"/>
+                            <field name="end_time" readonly="state !='draft'"/>
                             <field name="date" readonly="not is_director"/>
                         </group>
                     </group>
                     <notebook>
+                        <page string="Pending Work" name="pending_works">
+                            <field name="yesterday_wrk_support_ids" mode="tree" readonly="state !='draft'">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="time_taken"/>
+                                    <field name="current_status"/>
+                                </tree>
+                            </field>
+                            <field name="summary1" class="oe_inline" placeholder="Enter summary here..."/>
+                        </page>
                         <page name="today_report" string="Today Work">
-                            <field name="today_wrk_support_ids">
+                            <field name="today_wrk_support_ids" mode="tree" readonly="state !='draft'">
                                 <tree editable="bottom">
                                     <field name="name" required="1"/>
                                     <field name="time_taken" required="1"/>
                                     <field name="current_status" required="1"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page string="Pending Work" name="pending_work">
-                            <field name="yesterday_wrk_support_ids" mode="tree">
-                                <tree editable="bottom">
-                                    <field name="name"/>
-                                    <field name="time_taken"/>
-                                    <field name="current_status"/>
-                                </tree>
-                            </field>
+                            <field name="summary2" class="oe_inline" placeholder="Enter summary here..."/>
                         </page>
                         <page name="balance_report" string="Balance Work">
-                            <field name="balance_wrk_support_ids">
+                            <field name="balance_wrk_support_ids" mode="tree" readonly="state !='draft'">
                                 <tree editable="bottom">
                                     <field name="name"/>
                                     <field name="time_taken"/>
                                     <field name="current_status"/>
                                 </tree>
                             </field>
+                            <field name="summary3" class="oe_inline" placeholder="Enter summary here..."/>
                         </page>
                     </notebook>
                     <group>
-                        <group>
-
-                            <field name="summary" class="oe_inline" placeholder="Enter summary here..."/>
-                        </group>
                     </group>
                     <group>
                         <group>
@@ -95,6 +95,10 @@
                         </group>
                     </group>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

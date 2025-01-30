@@ -58,7 +58,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="department_id"/>
+                            <field name="department_id" options="{'no_open': True}" readonly="1"/>
                             <field name="total_work_hours"/>
                             <field name="is_half_day" invisible="1"/>
                         </group>

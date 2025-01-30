@@ -17,12 +17,12 @@
         <field name="name">user</field>
         <field name="category_id" ref="report_group"/>
     </record>
-    <record id="support_staff_manger" model="res.groups">
-        <field name="name">Support Staff Manger</field>
+    <record id="staff_report" model="res.groups">
+        <field name="name">Staff</field>
         <field name="category_id" ref="report_group"/>
     </record>
-    <record id="support_staff_report" model="res.groups">
-        <field name="name">Support Staff</field>
+    <record id="staff_manager" model="res.groups">
+        <field name="name">Staff: Manager</field>
         <field name="category_id" ref="report_group"/>
     </record>
 </odoo>

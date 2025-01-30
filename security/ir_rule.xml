@@ -20,32 +20,32 @@
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('user_report'))]"/>
         <field name="domain_force">
-            [   '|',
-                ('create_uid', '=', user.id),
-                '&amp;',
-                ('name.parent_id.user_id', '=', user.id),
-                ('state','!=','draft')
+            [ '|',
+            ('create_uid', '=', user.id),
+            '&amp;',
+            ('name.parent_id.user_id', '=', user.id),
+            ('state','!=','draft')
             ]
         </field>
     </record>
-    <record id="rule_support_staff_report" model="ir.rule">
-        <field name="name">Support Staff: See Own and Managed Records</field>
+    <record id="rule_staff_report" model="ir.rule">
+        <field name="name">Staff: See Own and Records</field>
         <field name="model_id" ref="model_support_staff"/>
-        <field name="groups" eval="[(4, ref('support_staff_manger'))]"/>
+        <field name="groups" eval="[(4, ref('staff_report'))]"/>
         <field name="domain_force">
             [
-                ('name.parent_id.user_id', '=', user.id),
-                ('state','=','submitted')
+            ('create_uid', '=', user.id)
             ]
         </field>
     </record>
-    <record id="rule_staff_manger" model="ir.rule">
-        <field name="name">Support Staff: See Own and Managed Records</field>
+    <record id="rule_staff_report_manager" model="ir.rule">
+        <field name="name">Staff Manger: See Own and Managed Records</field>
         <field name="model_id" ref="model_support_staff"/>
-        <field name="groups" eval="[(4, ref('support_staff_report'))]"/>
+        <field name="groups" eval="[(4, ref('staff_manager'))]"/>
         <field name="domain_force">
             [
-                ('create_uid', '=', user.id)
+            ('name.parent_id.user_id', '=', user.id),
+            ('state','!=','draft')
             ]
         </field>
     </record>

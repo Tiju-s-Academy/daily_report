@@ -173,8 +173,10 @@ class EmployeeReport(models.Model):
         # if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
         #     raise ValidationError(_("The Total work hours should be achieved by the employee."))
 
-        self.state = 'submitted'
-        self.prepared_by = self.env.user.employee_id.id
+        self.write({
+            'state': 'submitted',
+            'prepared_by': self.env.user.employee_id.id
+        })
         # manager = self.name.parent_id
         # if manager:
         #     self.activity_schedule(
@@ -203,6 +205,7 @@ class EmployeeReport(models.Model):
                 raise UserError(_("You can only approve today's Reports"))
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
+            print("manager",self.approved_by)
             activity_ids = self.activity_ids
             if activity_ids:
                 activity_ids.unlink()

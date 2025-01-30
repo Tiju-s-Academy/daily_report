@@ -10,7 +10,7 @@
               action="action_employee_report"/>
     <menuitem id="menu_support_staff"
               name="Support Staff Report"
-              groups="daily_report.admin_report,daily_report.directors_report,daily_report.support_staff_report,daily_report.support_staff_manger"
+              groups="daily_report.admin_report,daily_report.directors_report,daily_report.staff_report,daily_report.staff_manager"
               sequence="2"
               parent="menu_daily_report_root"
               action="support_staff_action"/>
