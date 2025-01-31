@@ -85,7 +85,6 @@ class EmployeeReport(models.Model):
 
     actual_work_hours = fields.Char(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
 
-    #
     @api.depends('report_ids.time_taken')
     def _compute_actual_work_hours(self):
         for record in self:
@@ -101,16 +100,24 @@ class EmployeeReport(models.Model):
             hours, minutes = divmod(total_minutes, 60)
             record.actual_work_hours = f"{hours:02d}:{minutes:02d}"
 
-    # def _compare_time_strings(self, time1, time2):
-    #     """Compare two time strings in HH:MM format"""
-    #     if not time1 or not time2:
-    #         return False
-    #     try:
-    #         h1, m1 = map(int, time1.split(':'))
-    #         h2, m2 = map(int, time2.split(':'))
-    #         return (h1 * 60 + m1) < (h2 * 60 + m2)
-    #     except (ValueError, AttributeError):
-    #         return False
+    total_work_minutes = fields.Integer(string='Total Work Minutes', compute='_compute_actual_work_hours', store=True)
+
+    @api.depends('report_ids.time_taken')
+    def _compute_actual_work_hours(self):
+        for record in self:
+            total_minutes = 0
+            for report in record.report_ids:
+                if report.time_taken and isinstance(report.time_taken, str):
+                    try:
+                        hours, minutes = map(int, report.time_taken.split(':'))
+                        total_minutes += hours * 60 + minutes
+                    except (ValueError, AttributeError):
+                        continue
+
+            record.total_work_minutes = total_minutes  # Store total minutes
+            hours, minutes = divmod(total_minutes, 60)
+            record.actual_work_hours = f"{hours:02d}:{minutes:02d}"
+
 
     @api.constrains('report_ids.time_taken')
     def _check_time_format(self):

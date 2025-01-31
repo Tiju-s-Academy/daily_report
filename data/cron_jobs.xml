@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Scheduled Action to Update Department Dashboard -->
+    <record id="ir_cron_update_dashboard" model="ir.cron">
+        <field name="name">Update Department Dashboard</field>
+        <field name="model_id" ref="model_department_dashboard"/>
+        <field name="state">code</field>
+        <field name="code">model.update_dashboard()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="doall">False</field>
+    </record>
+</odoo>

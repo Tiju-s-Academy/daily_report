@@ -6,6 +6,7 @@
     'author': 'Tijus Academy',
     'data': [
         'data/activity.xml',
+        # 'data/cron_jobs.xml',
         'security/group.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
@@ -14,6 +15,7 @@
         'views/employee_report_view.xml',
         'wizard/report_reject_wizard_view.xml',
         'views/support_staff_view.xml',
+        # 'views/department_dashboard_view.xml',
         'views/daily_report_menu.xml',
         'data/job_status_data.xml',
     ],
