@@ -113,7 +113,7 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[ '|',
             ('create_uid', '=', uid),
-            '&amp;',
+            '|',
             ('name.parent_id.user_id', '=', uid),
             ('state','!=','draft')
             ]</field>
