@@ -111,5 +111,11 @@
         <field name="name">Employee Reports</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
+        <field name="domain">[ '|',
+            ('create_uid', '=', uid),
+            '&amp;',
+            ('name.parent_id.user_id', '=', uid),
+            ('state','!=','draft')
+            ]</field>
     </record>
 </odoo>

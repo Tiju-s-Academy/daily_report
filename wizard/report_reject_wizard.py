@@ -9,8 +9,6 @@ class ReportRejectWizard(models.Model):
     employee_report_id = fields.Many2one('employee.report', string='Employee Report', readonly=True)
 
     def action_reject_report(self):
-        print("employee_report_id", self.employee_report_id)
-        print("staff_report_id", self.staff_report_id)
         if self.employee_report_id:
             print("its employee work")
             today = fields.Date.today()

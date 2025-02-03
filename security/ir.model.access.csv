@@ -3,40 +3,37 @@ access_job_status_admin,job status admin,model_job_status,admin_report,1,1,1,1
 access_report_admin,report admin,model_report,admin_report,1,1,1,1
 access_employee_report_admin,employee report admin,model_employee_report,admin_report,1,1,1,1
 
+access_yesterday_report_admin,admin yesterday report,model_yesterday_wrk_support,admin_report,1,1,1,1
+access_today_report_admin,admin today report,model_today_wrk_support,admin_report,1,1,1,1
+access_balance_report_admin,admin balance report,model_balance_wrk_support,admin_report,1,1,1,1
+access_staff_admin,staff report admin,model_support_staff,admin_report,1,1,1,1
+
 access_job_status_directors,job status directors,model_job_status,directors_report,1,1,0,0
 access_report_directors,report directors,model_report,directors_report,1,1,1,1
 access_employee_report_directors,employee report directors,model_employee_report,directors_report,1,1,1,1
 
+access_yesterday_report_director,director yesterday report,model_yesterday_wrk_support,directors_report,1,1,1,1
+access_today_report_director,director today report,model_today_wrk_support,directors_report,1,1,1,1
+access_balance_report_director,director balance report,model_balance_wrk_support,directors_report,1,1,1,1
+access_staff_director,staff report director,model_support_staff,directors_report,1,1,1,1
+
 access_job_status_user,job status user,model_job_status,user_report,1,1,0,0
 access_report_user,report user,model_report,user_report,1,1,1,1
 access_employee_report_user,employee report user,model_employee_report,user_report,1,1,1,0
-
-access_reject_wizard_admin,report reject admin,model_report_reject_wizard,admin_report,1,1,1,1
-access_reject_wizard_user,report reject user,model_report_reject_wizard,user_report,1,1,1,0
-access_reject_wizard_manager,report reject manager,model_report_reject_wizard,staff_manager,1,1,1,0
+access_reject_wizard_user,report reject user,model_report_reject_wizard,,1,1,1,1
 
 access_yesterday_report_staff,staff yesterday report,model_yesterday_wrk_support,staff_report,1,1,1,1
 access_today_report_staff,staff today report,model_today_wrk_support,staff_report,1,1,1,1
 access_balance_report_staff,staff balance report,model_balance_wrk_support,staff_report,1,1,1,1
+access_staff_report,staff report staff,model_support_staff,staff_report,1,1,1,1
 access_job_status_staff,job status staff,model_job_status,staff_report,1,1,0,0
-
-access_yesterday_report_admin,admin yesterday report,model_yesterday_wrk_support,admin_report,1,1,1,1
-access_today_report_admin,admin today report,model_today_wrk_support,admin_report,1,1,1,1
-access_balance_report_admin,admin balance report,model_balance_wrk_support,admin_report,1,1,1,1
-
-access_yesterday_report_director,director yesterday report,model_yesterday_wrk_support,admin_report,1,1,0,0
-access_today_report_director,director today report,model_today_wrk_support,admin_report,1,1,0,0
-access_balance_report_director,director balance report,model_balance_wrk_support,admin_report,1,1,0,0
-
 
 access_yesterday_staff_manager,staff manger yesterday report,model_yesterday_wrk_support,staff_manager,1,1,0,0
 access_today_staff_manager,staff manager today report,model_today_wrk_support,staff_manager,1,1,0,0
 access_balance_staff_manager,staff manager balance report,model_balance_wrk_support,staff_manager,1,1,0,0
 access_job_status_staff_manager,job status staff manager,model_job_status,staff_manager,1,1,0,0
-
-access_staff_report,staff report staff,model_support_staff,staff_report,1,1,1,1
 access_staff_manger,staff report manger,model_support_staff,staff_manager,1,1,0,0
-access_staff_admin,staff report admin,model_support_staff,admin_report,1,1,1,1
+
 
 
 

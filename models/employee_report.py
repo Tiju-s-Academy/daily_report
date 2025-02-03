@@ -226,6 +226,8 @@ class EmployeeReport(models.Model):
         else:
             raise ValidationError(_("You are not a Manger of the employee or Director"))
 
+    reject_reason = fields.Text(string='Reason', tracking=True)
+
     def action_reject(self):
         today = fields.Date.today()
         print("check", self.env.user.has_group('daily_report.directors_report'))
@@ -253,4 +255,4 @@ class EmployeeReport(models.Model):
             raise ValidationError(_("You are not a Manger of the employee or Director"))
 
     summary = fields.Html(string="Summary", store=True)
-    reject_reason = fields.Text(string='Reason', tracking=True)
+

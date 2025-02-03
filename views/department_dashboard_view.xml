@@ -4,52 +4,56 @@
         <field name="name">department.dashboard.kanban</field>
         <field name="model">department.dashboard</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_dashboard">
-                <!-- Fields to load -->
+
+            <kanban class="o_kanban_dashboard" create="0">
+
                 <field name="name"/>
                 <field name="employee_count"/>
                 <field name="total_reports_today"/>
                 <field name="total_support_staff_today"/>
-
-                <!-- Kanban Templates -->
                 <templates>
                     <t t-name="kanban-box">
-                        <!-- Kanban Card Styling -->
-                        <div class="oe_kanban_global_click o_kanban_record">
-                            <!-- Card Header with Department Name -->
-                            <div class="o_kanban_record_header">
-                                <strong class="o_kanban_record_title">
-                                    <field name="name"/>
-                                </strong>
-                            </div>
-
-                            <!-- Card Body with Metrics -->
-                            <div class="o_kanban_record_body">
-                                <!-- Employees Count -->
-                                <div class="metric mb-2">
-                                    <i class="fa fa-users fa-lg mr-2" aria-hidden="true"></i>
-                                    <span class="metric-label">Employees:</span>
-                                    <span class="metric-value"><field name="employee_count"/></span>
-                                </div>
-
-                                <!-- Reports Today -->
-                                <div class="metric mb-2">
-                                    <i class="fa fa-file-text fa-lg mr-2" aria-hidden="true"></i>
-                                    <span class="metric-label">Reports Today:</span>
-                                    <span class="metric-value"><field name="total_reports_today"/></span>
-                                </div>
-
-                                <!-- Support Staff Today -->
-                                <div class="metric mb-2">
-                                    <i class="fa fa-life-ring fa-lg mr-2" aria-hidden="true"></i>
-                                    <span class="metric-label">Support Staff Today:</span>
-                                    <span class="metric-value"><field name="total_support_staff_today"/></span>
+                        <div>
+                            <span/>
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <field name="name"/>
+                                    </div>
                                 </div>
                             </div>
-
-                            <!-- Card Footer with Status -->
-                            <div class="o_kanban_record_footer">
-                                <span class="badge badge-success">Active</span>
+                            <div class="container o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col o_kanban_primary_left">
+                                        <button class="btn btn-primary o_helpdesk_ticket_btn"
+                                                name="action_open_employee_list" type="object">
+                                            <field name="employee_count"/> - Employees
+                                        </button>
+                                    </div>
+                                    <div class="col o_kanban_primary_right">
+                                        <span class="text-muted">
+                                            <field name="not_submitted_count" options="{'widget': 'many2one'}"/>Not Submitted
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="row pt-5">
+                                    <div class="col">
+                                        <a class="d-flex flex-column align-items-center">
+                                            <span class="fw-bold">
+                                                <field name="total_reports_today"/>
+                                            </span>
+                                            <span class="text-muted">Employees Report</span>
+                                        </a>
+                                    </div>
+                                    <div class="col text-center border-start">
+                                        <a class="d-flex flex-column align-items-center">
+                                            <span class="fw-bold">
+                                                <field name="total_support_staff_today"/>
+                                            </span>
+                                            <span class="text-muted">Support Staff</span>
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </t>
@@ -57,7 +61,6 @@
             </kanban>
         </field>
     </record>
-
     <!-- Action for the Dashboard -->
     <record id="action_department_dashboard" model="ir.actions.act_window">
         <field name="name">Department Dashboard</field>
@@ -65,3 +68,4 @@
         <field name="view_mode">kanban</field>
     </record>
 </odoo>
+

@@ -22,9 +22,8 @@
         <field name="domain_force">
             [ '|',
             ('create_uid', '=', user.id),
-            '&amp;',
             ('name.parent_id.user_id', '=', user.id),
-            ('state','!=','draft')
+
             ]
         </field>
     </record>
