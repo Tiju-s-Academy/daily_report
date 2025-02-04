@@ -10,7 +10,7 @@
         <field name="category_id" ref="report_group"/>
     </record>
     <record id="directors_report" model="res.groups">
-        <field name="name">Directors</field>
+        <field name="name">VP</field>
         <field name="category_id" ref="report_group"/>
     </record>
     <record id="user_report" model="res.groups">
