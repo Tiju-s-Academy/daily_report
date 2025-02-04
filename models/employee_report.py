@@ -135,6 +135,7 @@ class EmployeeReport(models.Model):
 
     is_half_day = fields.Boolean(string="Half day report", compute="_compute_is_half_day")
     is_director = fields.Boolean(string='Is Director', compute="_compute_is_manager", store=True)
+    is_md = fields.Boolean(string='Is MD',compute="_compute_is_manager", store=True)
 
     @api.depends('name')
     def _compute_is_half_day(self):
@@ -158,6 +159,7 @@ class EmployeeReport(models.Model):
             record.is_manager = record.name.parent_id.user_id == self.env.user
             print("manager ",record.is_manager)
             record.is_director = self.env.user.has_group('daily_report.directors_report')
+            record.is_md = self.env.user.has_group('daily_report.admin_report')
 
     @api.constrains('name', 'date')
     def _check_unique_record_per_day(self):
@@ -194,7 +196,7 @@ class EmployeeReport(models.Model):
     def action_approve(self):
         today = fields.Date.today()
         print("check", self.env.user.has_group('daily_report.directors_report'))
-        if self.is_director:
+        if self.is_director or self.is_md:
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
             activity_ids = self.activity_ids
@@ -231,7 +233,7 @@ class EmployeeReport(models.Model):
     def action_reject(self):
         today = fields.Date.today()
         print("check", self.env.user.has_group('daily_report.directors_report'))
-        if self.is_director:
+        if self.is_director or self.is_md:
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Reason'),
