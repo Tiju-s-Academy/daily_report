@@ -22,7 +22,7 @@
             <search string="Employee Reports">
                 <filter string="My Report" name="my_report" domain="[('create_uid', '=', uid)]"/>
                 <filter string="My Team" name="my_team"
-                        domain="[('name.parent_id.user_id', '=', uid),('state','=','submitted')]"/>
+                        domain="[('name.parent_id.user_id', '=', uid),('state','!=','draft')]"/>
                 <filter string="Today's Report" name="today_report" domain="[('date', '=', context_today())]"/>
                 <field name="name"/>
                 <field name="department_id"/>
