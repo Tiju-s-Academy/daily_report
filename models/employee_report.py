@@ -1,6 +1,8 @@
 import re
-from datetime import date
+import tz
+from datetime import date,datetime
 import calendar
+
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError, UserError
 
@@ -55,33 +57,30 @@ class EmployeeReport(models.Model):
 
     @api.depends('name')
     def _compute_total_work_hours(self):
+        """ Compute total work hours based on default 08:00 hours and half-day conditions """
         for record in self:
-            if record.name and record.name.resource_calendar_id:
-                hours_per_day = record.name.resource_calendar_id.hours_per_day
+            hours_per_day = 8.0  # Default working hours (08:00)
 
-                # Get today's date
-                today = date.today()
+            today = date.today()
 
-                # Check if today is 1st or 3rd Saturday
-                if today.weekday() == calendar.SATURDAY:  # Check if today is Saturday
-                    month_calendar = calendar.Calendar()
-                    saturdays = [
-                        day for day in month_calendar.itermonthdays2(today.year, today.month)
-                        if day[0] != 0 and day[1] == calendar.SATURDAY
-                    ]
-                    if (today.day == saturdays[0][0] or (len(saturdays) > 2 and today.day == saturdays[2][0])):
-                        hours_per_day = record.name.resource_calendar_id.hours_per_day / 2.0  # Apply half-day rule
+            # Check if today is 1st or 3rd Saturday
+            if today.weekday() == calendar.SATURDAY:
+                month_calendar = calendar.Calendar()
+                saturdays = [
+                    day for day in month_calendar.itermonthdays2(today.year, today.month)
+                    if day[0] != 0 and day[1] == calendar.SATURDAY
+                ]
+                if today.day == saturdays[0][0] or (len(saturdays) > 2 and today.day == saturdays[2][0]):
+                    hours_per_day /= 2.0  # Half-day rule for 1st and 3rd Saturday
 
-                # Apply half-day flag
-                if record.is_half_day:
-                    hours_per_day = record.name.resource_calendar_id.hours_per_day / 2.0
+            # Apply half-day leave rule
+            if record.is_half_day:
+                hours_per_day /= 2.0
 
-                # Compute total work hours
-                hours = int(hours_per_day)
-                minutes = int((hours_per_day - hours) * 60)
-                record.total_work_hours = f"{hours:02d}:{minutes:02d}"
-            else:
-                record.total_work_hours = "00:00"
+            # Convert to HH:MM format
+            hours = int(hours_per_day)
+            minutes = int((hours_per_day - hours) * 60)
+            record.total_work_hours = f"{hours:02d}:{minutes:02d}"
 
     actual_work_hours = fields.Char(string='Actual Work Hours', compute='_compute_actual_work_hours', store=True)
 
@@ -136,6 +135,7 @@ class EmployeeReport(models.Model):
     is_half_day = fields.Boolean(string="Half day report", compute="_compute_is_half_day")
     is_director = fields.Boolean(string='Is Director', compute="_compute_is_manager", store=True)
     is_md = fields.Boolean(string='Is MD',compute="_compute_is_manager", store=True)
+    submitted_time = fields.Datetime(string='Submission Date',readonly=True,tracking=True)
 
     @api.depends('name')
     def _compute_is_half_day(self):
@@ -167,8 +167,11 @@ class EmployeeReport(models.Model):
             if self.search_count([('name', '=', record.name.id), ('date', '=', record.date)]) > 1:
                 raise ValidationError(_("An employee can only submit one report per day."))
 
+
+
     def action_submit(self):
         today = fields.Date.today()
+        print(fields.datetime.now())
         # Validate incomplete tasks
         for report in self.report_ids:
             if not self.is_director:
@@ -184,7 +187,8 @@ class EmployeeReport(models.Model):
 
         self.write({
             'state': 'submitted',
-            'prepared_by': self.env.user.employee_id.id
+            'prepared_by': self.env.user.employee_id.id,
+            'submitted_time': fields.datetime.now()
         })
         # manager = self.name.parent_id
         # if manager:

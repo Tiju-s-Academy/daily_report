@@ -11,10 +11,12 @@
         <field name="name">VP: Approve anytime</field>
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('directors_report'))]"/>
-        <field name="domain_force">[ '|',
+        <field name="domain_force">
+            [ '|',
             ('create_uid', '=', user.id),
             ('name.parent_id.user_id', '=', user.id),
-            ]</field>
+            ]
+        </field>
     </record>
 
     <!-- User Rule: See Own and Managed Records -->
@@ -26,7 +28,6 @@
             [ '|',
             ('create_uid', '=', user.id),
             ('name.parent_id.user_id', '=', user.id),
-
             ]
         </field>
     </record>
