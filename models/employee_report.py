@@ -135,7 +135,8 @@ class EmployeeReport(models.Model):
     is_half_day = fields.Boolean(string="Half day report", compute="_compute_is_half_day")
     is_director = fields.Boolean(string='Is Director', compute="_compute_is_manager", store=True)
     is_md = fields.Boolean(string='Is MD',compute="_compute_is_manager", store=True)
-    submitted_time = fields.Datetime(string='Submission Date',readonly=True,tracking=True)
+    submitted_time = fields.Datetime(string='Submission On',readonly=True,tracking=True)
+    approved_time = fields.Datetime(string='Approved On',readonly=True,tracking=True)
 
     @api.depends('name')
     def _compute_is_half_day(self):
@@ -171,7 +172,6 @@ class EmployeeReport(models.Model):
 
     def action_submit(self):
         today = fields.Date.today()
-        print(fields.datetime.now())
         # Validate incomplete tasks
         for report in self.report_ids:
             if not self.is_director:
@@ -203,6 +203,7 @@ class EmployeeReport(models.Model):
         if self.is_director or self.is_md:
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
+            self.approved_time=  fields.datetime.now()
             activity_ids = self.activity_ids
             if activity_ids:
                 activity_ids.unlink()
@@ -218,7 +219,7 @@ class EmployeeReport(models.Model):
                 raise UserError(_("You can only approve today's Reports"))
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
-            print("manager",self.approved_by)
+            self.approved_time = fields.datetime.now()
             activity_ids = self.activity_ids
             if activity_ids:
                 activity_ids.unlink()
@@ -236,7 +237,6 @@ class EmployeeReport(models.Model):
 
     def action_reject(self):
         today = fields.Date.today()
-        print("check", self.env.user.has_group('daily_report.directors_report'))
         if self.is_director or self.is_md:
             return {
                 'type': 'ir.actions.act_window',
@@ -248,7 +248,7 @@ class EmployeeReport(models.Model):
             }
         elif self.is_manager:
             if self.date != today:
-                raise UserError(_("You can only approve today's Reports"))
+                raise UserError(_("You can only Reject today's Reports"))
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Reason'),
