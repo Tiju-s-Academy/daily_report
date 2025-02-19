@@ -10,7 +10,7 @@
                 <field name="name"/>
                 <field name="employee_count"/>
                 <field name="total_reports_today"/>
-                <field name="total_support_staff_today"/>
+                <field name="not_submitted_count"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div>
@@ -45,14 +45,14 @@
                                             <span class="text-muted">Employees Report</span>
                                         </a>
                                     </div>
-                                    <div class="col text-center border-start">
-                                        <a class="d-flex flex-column align-items-center">
-                                            <span class="fw-bold">
-                                                <field name="total_support_staff_today"/>
-                                            </span>
-                                            <span class="text-muted">Support Staff</span>
-                                        </a>
-                                    </div>
+<!--                                    <div class="col text-center border-start">-->
+<!--                                        <a class="d-flex flex-column align-items-center">-->
+<!--                                            <span class="fw-bold">-->
+<!--                                                <field name="total_support_staff_today"/>-->
+<!--                                            </span>-->
+<!--                                            <span class="text-muted">Support Staff</span>-->
+<!--                                        </a>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                         </div>

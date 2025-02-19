@@ -12,10 +12,10 @@
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('directors_report'))]"/>
         <field name="domain_force">
-            [ '|',
+        ['|',
             ('create_uid', '=', user.id),
-            ('name.parent_id.user_id', '=', user.id),
-            ]
+            ('name', 'child_of', user.employee_id.id)
+        ]
         </field>
     </record>
 
@@ -25,10 +25,10 @@
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('user_report'))]"/>
         <field name="domain_force">
-            [ '|',
+        ['|',
             ('create_uid', '=', user.id),
-            ('name.parent_id.user_id', '=', user.id),
-            ]
+            ('name', 'child_of', user.employee_id.id)
+        ]
         </field>
     </record>
     <record id="rule_staff_report" model="ir.rule">

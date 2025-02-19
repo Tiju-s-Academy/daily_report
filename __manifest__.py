@@ -5,7 +5,7 @@
     'depends': ['base', 'web', 'mail', 'hr','tijus_custom_base'],
     'author': 'Tijus Academy',
     'data': [
-        'data/activity.xml',
+        'data/mail_activity_data.xml',
         # 'data/cron_jobs.xml',
         'security/group.xml',
         'security/ir.model.access.csv',
