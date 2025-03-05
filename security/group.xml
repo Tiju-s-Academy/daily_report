@@ -9,6 +9,10 @@
         <field name="name">admin</field>
         <field name="category_id" ref="report_group"/>
     </record>
+    <record id="super_admin" model="res.groups">
+        <field name="name">Super Admin</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
     <record id="directors_report" model="res.groups">
         <field name="name">VP</field>
         <field name="category_id" ref="report_group"/>

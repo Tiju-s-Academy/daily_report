@@ -67,7 +67,7 @@
                                 <tree editable="bottom">
                                     <field name="name" required="1"/>
                                     <field name="time_taken" required="1"/>
-                                    <field name="current_status" required="1"/>
+                                    <field name="current_status" required="1" options="{'no_create':True}"/>
                                 </tree>
                             </field>
                             <field name="summary2" class="oe_inline" placeholder="Enter summary here..."/>

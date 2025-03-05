@@ -80,7 +80,7 @@
                                     <field name="task_id"/>
                                     <field name="activity"/>
                                     <field name="time_taken" required="1"/>
-                                    <field name="current_status" required="1"/>
+                                    <field name="current_status" required="1" options="{'no_create':True}"/>
                                     <field name="to_work_on"/>
                                     <field name="expected_close_date"/>
                                     <field name="remarks_if_any"/>
