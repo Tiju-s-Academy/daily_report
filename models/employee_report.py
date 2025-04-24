@@ -262,3 +262,16 @@ class EmployeeReport(models.Model):
 
     summary = fields.Html(string="Summary", store=True)
 
+    # Complaint Fields
+    student_concerns = fields.Text(string="Student Concerns")
+    employee_concerns = fields.Text(string="Employee Concerns")
+    other_concerns = fields.Text(string="Other Concerns")
+    has_concerns = fields.Boolean(string="Has Concerns", compute='_compute_has_concerns', store=True)
+
+    @api.depends('student_concerns', 'employee_concerns', 'other_concerns')
+    def _compute_has_concerns(self):
+        for record in self:
+            record.has_concerns = bool(record.student_concerns or 
+                                     record.employee_concerns or 
+                                     record.other_concerns)
+

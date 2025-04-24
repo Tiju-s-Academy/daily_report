@@ -100,6 +100,13 @@
                                 </group>
                             </group>
                         </page>
+                        <page string="Concerns" name="concerns">
+                            <group>
+                                <field name="student_concerns" placeholder="Enter any student related concerns..."/>
+                                <field name="employee_concerns" placeholder="Enter any employee related concerns..."/>
+                                <field name="other_concerns" placeholder="Enter any other concerns..."/>
+                            </group>
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
