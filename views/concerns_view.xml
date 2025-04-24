@@ -4,14 +4,33 @@
         <field name="name">concerns.tree</field>
         <field name="model">employee.report</field>
         <field name="arch" type="xml">
-            <tree string="Employee Concerns">
+            <tree string="Employee Concerns" create="false" edit="false">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="department_id"/>
-                <field name="student_concerns"/>
-                <field name="employee_concerns"/>
-                <field name="other_concerns"/>
+                <field name="has_concerns" invisible="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="view_concerns_form" model="ir.ui.view">
+        <field name="name">concerns.form</field>
+        <field name="model">employee.report</field>
+        <field name="arch" type="xml">
+            <form string="Concerns Details" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <field name="date"/>
+                        <field name="name"/>
+                        <field name="department_id"/>
+                    </group>
+                    <group string="Concerns">
+                        <field name="student_concerns" nolabel="1" placeholder="Student Concerns" readonly="1"/>
+                        <field name="employee_concerns" nolabel="1" placeholder="Employee Concerns" readonly="1"/>
+                        <field name="other_concerns" nolabel="1" placeholder="Other Concerns" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
         </field>
     </record>
 
@@ -20,12 +39,15 @@
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('has_concerns', '=', True)]</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+                                    (0, 0, {'view_mode': 'tree', 'view_id': ref('view_concerns_tree')}),
+                                    (0, 0, {'view_mode': 'form', 'view_id': ref('view_concerns_form')})]"/>
     </record>
 
     <menuitem id="menu_concerns"
               name="Employee Concerns"
               parent="menu_daily_report_root"
               action="action_concerns_view"
-              groups="daily_report.directors_report"
+              groups="daily_report.directors_report,daily_report.admin_report"
               sequence="5"/>
 </odoo>
