@@ -1,47 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
     <record id="view_concerns_tree" model="ir.ui.view">
-        <field name="name">concerns.tree</field>
+        <field name="name">concerns.tree.view</field>
         <field name="model">employee.report</field>
+        <field name="priority">99</field>
         <field name="arch" type="xml">
             <tree string="Employee Concerns" create="false" edit="false">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="department_id"/>
-                <field name="has_concerns" invisible="1"/>
+                <field name="student_concerns"/>
+                <field name="employee_concerns"/>
+                <field name="other_concerns"/>
             </tree>
-        </field>
-    </record>
-
-    <record id="view_concerns_form" model="ir.ui.view">
-        <field name="name">concerns.form</field>
-        <field name="model">employee.report</field>
-        <field name="arch" type="xml">
-            <form string="Concerns Details" create="false" edit="false">
-                <sheet>
-                    <group>
-                        <field name="date"/>
-                        <field name="name"/>
-                        <field name="department_id"/>
-                    </group>
-                    <group string="Concerns">
-                        <field name="student_concerns" nolabel="1" placeholder="Student Concerns" readonly="1"/>
-                        <field name="employee_concerns" nolabel="1" placeholder="Employee Concerns" readonly="1"/>
-                        <field name="other_concerns" nolabel="1" placeholder="Other Concerns" readonly="1"/>
-                    </group>
-                </sheet>
-            </form>
         </field>
     </record>
 
     <record id="action_concerns_view" model="ir.actions.act_window">
         <field name="name">Employee Concerns</field>
         <field name="res_model">employee.report</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
         <field name="domain">[('has_concerns', '=', True)]</field>
-        <field name="view_ids" eval="[(5, 0, 0),
-                                    (0, 0, {'view_mode': 'tree', 'view_id': ref('view_concerns_tree')}),
-                                    (0, 0, {'view_mode': 'form', 'view_id': ref('view_concerns_form')})]"/>
+        <field name="view_id" ref="view_concerns_tree"/>
     </record>
 
     <menuitem id="menu_concerns"
