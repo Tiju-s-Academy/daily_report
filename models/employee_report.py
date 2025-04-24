@@ -263,9 +263,9 @@ class EmployeeReport(models.Model):
     summary = fields.Html(string="Summary", store=True)
 
     # Complaint Fields
-    student_concerns = fields.Text(string="Student Concerns", readonly="state != 'draft'")
-    employee_concerns = fields.Text(string="Employee Concerns", readonly="state != 'draft'")
-    other_concerns = fields.Text(string="Other Concerns", readonly="state != 'draft'")
+    student_concerns = fields.Text(string="Student Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
+    employee_concerns = fields.Text(string="Employee Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
+    other_concerns = fields.Text(string="Other Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
     has_concerns = fields.Boolean(string="Has Concerns", compute='_compute_has_concerns', store=True)
 
     @api.depends('student_concerns', 'employee_concerns', 'other_concerns')
