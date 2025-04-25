@@ -102,9 +102,9 @@
                         </page>
                         <page string="Concerns" name="concerns">
                             <group>
-                                <field name="student_concerns" placeholder="Enter any student related concerns..."/>
-                                <field name="employee_concerns" placeholder="Enter any employee related concerns..."/>
-                                <field name="other_concerns" placeholder="Enter any other concerns..."/>
+                                <field name="student_concerns" placeholder="Enter any student related concerns..." readonly="state !='draft'"/>
+                                <field name="employee_concerns" placeholder="Enter any employee related concerns..." readonly="state !='draft'"/>
+                                <field name="other_concerns" placeholder="Enter any other concerns..." readonly="state !='draft'"/>
                             </group>
                         </page>
                     </notebook>
