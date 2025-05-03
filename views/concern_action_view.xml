@@ -98,4 +98,29 @@
             </p>
         </field>
     </record>
+
+    <!-- Add this form view for popups if it doesn't exist already -->
+    <record id="view_concern_action_form_popup" model="ir.ui.view">
+        <field name="name">concern.action.form.popup</field>
+        <field name="model">concern.action</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Quick Action">
+                <sheet>
+                    <group>
+                        <field name="name" placeholder="Action Title"/>
+                        <field name="concern_type"/>
+                        <field name="action_date"/>
+                        <field name="description" placeholder="Describe the action taken..."/>
+                        <field name="employee_report_id" invisible="1"/>
+                        <field name="state"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button string="Save" class="btn-primary" special="save"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
 </odoo>

@@ -290,3 +290,17 @@ class EmployeeReport(models.Model):
                                      record.employee_concerns or 
                                      record.other_concerns)
 
+    def action_quick_create_concern(self):
+        """Open a form to quickly create a concern action record"""
+        self.ensure_one()
+        return {
+            'name': _('Create Action'),
+            'type': 'ir.actions.act_window',
+            'res_model': 'concern.action',
+            'view_mode': 'form',
+            'target': 'new',  # Opens as a dialog/popup
+            'context': {
+                'default_employee_report_id': self.id,
+            },
+        }
+

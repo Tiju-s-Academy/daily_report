@@ -13,7 +13,7 @@
                 <field name="employee_concerns"/>
                 <field name="other_concerns"/>
                 <field name="concern_action_count" string="Actions Taken"/>
-                <button name="%(action_concern_action_wizard)d" type="action" 
+                <button name="action_quick_create_concern" type="object" 
                         string="Add Action" class="btn btn-secondary" 
                         icon="fa-plus-circle"
                         groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
