@@ -268,6 +268,10 @@ class EmployeeReport(models.Model):
     other_concerns = fields.Text(string="Other Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
     has_concerns = fields.Boolean(string="Has Concerns", compute='_compute_has_concerns', store=True)
 
+    # Update the concern_action_count field to be stored
+    concern_action_count = fields.Integer(string="Actions Count", compute="_compute_concern_action_count", store=True)
+    has_action = fields.Boolean(string="Has Action", compute="_compute_concern_action_count", store=True)
+
     concern_action_ids = fields.One2many('concern.action', 'employee_report_id', string="Concern Actions")
     student_concern_count = fields.Integer(string="Student Actions", compute="_compute_concern_action_count")
     employee_concern_count = fields.Integer(string="Employee Actions", compute="_compute_concern_action_count")
@@ -276,12 +280,18 @@ class EmployeeReport(models.Model):
     
     @api.depends('concern_action_ids', 'concern_action_ids.state')
     def _compute_concern_action_count(self):
-        for record in self:
-            actions = record.concern_action_ids
-            record.student_concern_count = len(actions.filtered(lambda a: a.concern_type == 'student'))
-            record.employee_concern_count = len(actions.filtered(lambda a: a.concern_type == 'employee'))
-            record.other_concern_count = len(actions.filtered(lambda a: a.concern_type == 'other'))
-            record.concern_action_count = len(actions)
+        for report in self:
+            actions = report.concern_action_ids
+            report.concern_action_count = len(actions)
+            report.has_action = bool(actions)
+            
+            # Calculate specific concern type counts if they exist in the model
+            if hasattr(report, 'student_concern_count'):
+                report.student_concern_count = len(actions.filtered(lambda a: a.concern_type == 'student'))
+            if hasattr(report, 'employee_concern_count'):
+                report.employee_concern_count = len(actions.filtered(lambda a: a.concern_type == 'employee'))
+            if hasattr(report, 'other_concern_count'):
+                report.other_concern_count = len(actions.filtered(lambda a: a.concern_type == 'other'))
 
     @api.depends('student_concerns', 'employee_concerns', 'other_concerns')
     def _compute_has_concerns(self):

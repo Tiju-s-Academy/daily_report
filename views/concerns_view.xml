@@ -5,7 +5,7 @@
         <field name="model">employee.report</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <tree string="Employee Concerns" create="false" edit="false" decoration-danger="concern_action_count == 0">
+            <tree string="Employee Concerns" create="false" edit="false" decoration-danger="not has_action">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="department_id"/>
@@ -13,6 +13,7 @@
                 <field name="employee_concerns"/>
                 <field name="other_concerns"/>
                 <field name="concern_action_count" string="Actions Taken" decoration-info="concern_action_count > 0"/>
+                <field name="has_action" invisible="1"/>
                 <button name="action_quick_create_concern" type="object" 
                         string="Add Action" class="btn btn-secondary" 
                         icon="fa-plus-circle"
@@ -117,8 +118,8 @@
                 <field name="name"/>
                 <field name="date"/>
                 <field name="department_id"/>
-                <filter string="Without Actions" name="no_actions" domain="[('concern_action_count', '=', 0)]"/>
-                <filter string="With Actions" name="with_actions" domain="[('concern_action_count', '>', 0)]"/>
+                <filter string="Without Actions" name="no_actions" domain="[('has_action', '=', False)]"/>
+                <filter string="With Actions" name="with_actions" domain="[('has_action', '=', True)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
                     <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
