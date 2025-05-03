@@ -5,14 +5,14 @@
         <field name="model">employee.report</field>
         <field name="priority">99</field>
         <field name="arch" type="xml">
-            <tree string="Employee Concerns" create="false" edit="false">
+            <tree string="Employee Concerns" create="false" edit="false" decoration-danger="concern_action_count == 0">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="department_id"/>
                 <field name="student_concerns"/>
                 <field name="employee_concerns"/>
                 <field name="other_concerns"/>
-                <field name="concern_action_count" string="Actions Taken"/>
+                <field name="concern_action_count" string="Actions Taken" decoration-info="concern_action_count > 0"/>
                 <button name="action_quick_create_concern" type="object" 
                         string="Add Action" class="btn btn-secondary" 
                         icon="fa-plus-circle"
@@ -109,12 +109,32 @@
         </field>
     </record>
 
+    <record id="view_concerns_search" model="ir.ui.view">
+        <field name="name">concerns.search</field>
+        <field name="model">employee.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Concerns">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="department_id"/>
+                <filter string="Without Actions" name="no_actions" domain="[('concern_action_count', '=', 0)]"/>
+                <filter string="With Actions" name="with_actions" domain="[('concern_action_count', '>', 0)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
     <record id="action_concerns_view" model="ir.actions.act_window">
         <field name="name">Employee Concerns</field>
         <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('has_concerns', '=', True)]</field>
+        <field name="context">{'search_default_no_actions': 1}</field>
         <field name="view_id" ref="view_concerns_tree"/>
+        <field name="search_view_id" ref="view_concerns_search"/>
     </record>
 
     <menuitem id="menu_concerns"

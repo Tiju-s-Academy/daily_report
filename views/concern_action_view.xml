@@ -108,7 +108,7 @@
             <form string="Quick Action">
                 <sheet>
                     <group>
-                        <field name="name" placeholder="Action Title"/>
+                        <field name="name" placeholder="Leave empty for auto-generation"/>
                         <field name="concern_type"/>
                         <field name="action_date"/>
                         <field name="description" placeholder="Describe the action taken..."/>

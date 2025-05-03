@@ -293,6 +293,12 @@ class EmployeeReport(models.Model):
     def action_quick_create_concern(self):
         """Open a form to quickly create a concern action record"""
         self.ensure_one()
+        
+        # Generate default title: "Action against [Employee Name]'s concern on [Date]"
+        default_title = _("Action against {}'s concern on {}").format(
+            self.name, self.date.strftime('%d-%m-%Y') if self.date else ''
+        )
+        
         return {
             'name': _('Create Action'),
             'type': 'ir.actions.act_window',
@@ -301,6 +307,7 @@ class EmployeeReport(models.Model):
             'target': 'new',  # Opens as a dialog/popup
             'context': {
                 'default_employee_report_id': self.id,
+                'default_name': default_title,
             },
         }
 

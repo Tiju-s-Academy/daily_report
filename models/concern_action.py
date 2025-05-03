@@ -6,7 +6,8 @@ class ConcernAction(models.Model):
     _order = 'action_date desc, id desc'
     _inherit = ['mail.thread']
 
-    name = fields.Char(string="Action Title", required=True, tracking=True)
+    # Make name not required
+    name = fields.Char(string="Action Title", required=False, tracking=True)
     description = fields.Text(string="Action Description", tracking=True)
     action_date = fields.Date(string="Action Date", default=fields.Date.today, required=True, tracking=True)
     taken_by = fields.Many2one('res.users', string="Taken By", 
@@ -24,6 +25,24 @@ class ConcernAction(models.Model):
         ('resolved', 'Resolved'),
         ('canceled', 'Canceled')
     ], string="Status", default='draft', tracking=True)
+    
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Auto-generate name if not provided
+            if not vals.get('name'):
+                # Get employee report to generate title
+                report_id = vals.get('employee_report_id')
+                if report_id:
+                    report = self.env['employee.report'].browse(report_id)
+                    vals['name'] = _("Action against {}'s concern on {}").format(
+                        report.name, fields.Date.to_string(vals.get('action_date', fields.Date.today()))
+                    )
+                else:
+                    vals['name'] = _("Action on {}").format(
+                        fields.Date.to_string(vals.get('action_date', fields.Date.today()))
+                    )
+        return super(ConcernAction, self).create(vals_list)
     
     def action_mark_in_progress(self):
         self.write({'state': 'in_progress'})
