@@ -13,6 +13,10 @@
                 <field name="employee_concerns"/>
                 <field name="other_concerns"/>
                 <field name="concern_action_count" string="Actions Taken"/>
+                <button name="%(action_concern_action_wizard)d" type="action" 
+                        string="Add Action" class="btn btn-secondary" 
+                        icon="fa-plus-circle"
+                        groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
             </tree>
         </field>
     </record>
@@ -119,11 +123,4 @@
               action="action_concerns_view"
               groups="daily_report.directors_report,daily_report.admin_report,daily_report.concern_managers"
               sequence="5"/>
-
-    <menuitem id="menu_concern_actions"
-              name="Concern Actions"
-              parent="menu_daily_report_root"
-              action="action_concern_action"
-              groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"
-              sequence="6"/>
 </odoo>
