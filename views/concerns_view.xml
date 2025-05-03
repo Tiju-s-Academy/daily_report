@@ -40,17 +40,21 @@
                                 <span class="o_stat_text">Student Actions</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" type="object" name="%(action_concern_action)d" 
+                        <button class="oe_stat_button" type="action" 
+                                name="%(daily_report.action_concern_action)d" 
                                 context="{'default_employee_report_id': active_id, 'default_concern_type': 'employee', 'search_default_employee_report_id': active_id, 'search_default_type_employee': 1}" 
-                                icon="fa-users" attrs="{'invisible': [('employee_concern_count', '=', 0)]}">
+                                icon="fa-users" 
+                                invisible="employee_concern_count == 0">
                             <div class="o_stat_info">
                                 <field name="employee_concern_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Employee Actions</span>
                             </div>
                         </button>
-                        <button class="oe_stat_button" type="object" name="%(action_concern_action)d" 
+                        <button class="oe_stat_button" type="action" 
+                                name="%(daily_report.action_concern_action)d" 
                                 context="{'default_employee_report_id': active_id, 'default_concern_type': 'other', 'search_default_employee_report_id': active_id, 'search_default_type_other': 1}" 
-                                icon="fa-question-circle" attrs="{'invisible': [('other_concern_count', '=', 0)]}">
+                                icon="fa-question-circle" 
+                                invisible="other_concern_count == 0">
                             <div class="o_stat_info">
                                 <field name="other_concern_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Other Actions</span>
