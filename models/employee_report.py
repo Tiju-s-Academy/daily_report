@@ -271,6 +271,8 @@ class EmployeeReport(models.Model):
     # Update the concern_action_count field to be stored
     concern_action_count = fields.Integer(string="Actions Count", compute="_compute_concern_action_count", store=True)
     has_action = fields.Boolean(string="Has Action", compute="_compute_concern_action_count", store=True)
+    latest_action_summary = fields.Char(string="Latest Action Summary", compute="_compute_latest_action", store=True)
+    action_taken_by = fields.Char(string="Action Taken By", compute="_compute_latest_action", store=True)
 
     concern_action_ids = fields.One2many('concern.action', 'employee_report_id', string="Concern Actions")
     student_concern_count = fields.Integer(string="Student Actions", compute="_compute_concern_action_count")
@@ -320,4 +322,32 @@ class EmployeeReport(models.Model):
                 'default_name': default_title,
             },
         }
+
+    @api.depends('concern_action_ids', 'concern_action_ids.action_date', 
+                 'concern_action_ids.name', 'concern_action_ids.description',
+                 'concern_action_ids.taken_by')
+    def _compute_latest_action(self):
+        for report in self:
+            latest_action = False
+            if report.concern_action_ids:
+                # Get the most recent action
+                latest_action = report.concern_action_ids.sorted(
+                    key=lambda r: (r.action_date, r.id), reverse=True)[0]
+        
+            if latest_action:
+                # Get a summary from description or name
+                if latest_action.description:
+                    # If there's a description, use a trimmed version
+                    summary = latest_action.description.strip()
+                    if len(summary) > 50:
+                        summary = summary[:47] + '...'
+                else:
+                    # Otherwise use the action name
+                    summary = latest_action.name or ''
+                    
+                report.latest_action_summary = summary
+                report.action_taken_by = latest_action.taken_by.name if latest_action.taken_by else ''
+            else:
+                report.latest_action_summary = False
+                report.action_taken_by = False
 
