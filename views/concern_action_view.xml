@@ -21,10 +21,10 @@
         <field name="arch" type="xml">
             <form string="Concern Action">
                 <header>
-                    <button name="action_mark_in_progress" string="Mark In Progress" type="object" states="draft" class="oe_highlight"/>
-                    <button name="action_mark_resolved" string="Mark Resolved" type="object" states="draft,in_progress" class="oe_highlight"/>
-                    <button name="action_mark_canceled" string="Cancel" type="object" states="draft,in_progress" class="btn-danger"/>
-                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" states="canceled,resolved" class="btn-secondary"/>
+                    <button name="action_mark_in_progress" string="Mark In Progress" type="object" invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_mark_resolved" string="Mark Resolved" type="object" invisible="state not in ('draft', 'in_progress')" class="oe_highlight"/>
+                    <button name="action_mark_canceled" string="Cancel" type="object" invisible="state not in ('draft', 'in_progress')" class="btn-danger"/>
+                    <button name="action_reset_to_draft" string="Reset to Draft" type="object" invisible="state not in ('canceled', 'resolved')" class="btn-secondary"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,resolved"/>
                 </header>
                 <sheet>
