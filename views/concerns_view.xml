@@ -13,138 +13,138 @@
                 <field name="employee_concerns"/>
                 <field name="other_concerns"/>
                 <field name="concern_action_count" string="Actions Taken" decoration-info="concern_action_count > 0"/>
-                <field name="has_action" invisible="1"/>ng="Latest Action" optional="show"/>
-                <button name="action_quick_create_concern" type="object" ="show"/>
+                <field name="latest_action_summary" string="Latest Action" optional="show"/>
+                <field name="action_taken_by" string="Action By" optional="show"/>
+                <field name="has_action" invisible="1"/>
+                <button name="action_quick_create_concern" type="object" 
                         string="Add Action" class="btn btn-secondary" 
-                        icon="fa-plus-circle"eate_concern" type="object" 
+                        icon="fa-plus-circle"
                         groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
-            </tree>     icon="fa-plus-circle"
-        </field>        groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
-    </record>/tree>
+            </tree>
         </field>
+    </record>
+
     <record id="view_concerns_form" model="ir.ui.view">
         <field name="name">concerns.form.view</field>
-        <field name="model">employee.report</field>ew">
-        <field name="priority">99</field>view</field>
-        <field name="arch" type="xml">eport</field>
+        <field name="model">employee.report</field>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
             <form string="Employee Concerns" create="false">
-                <header>h" type="xml">
+                <header>
                     <button name="%(action_concern_action)d" type="action" class="btn-primary" string="Add Action"
                             context="{'default_employee_report_id': active_id, 'search_default_employee_report_id': active_id}" 
                             groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
-                </header>   context="{'default_employee_report_id': active_id, 'search_default_employee_report_id': active_id}" 
-                <sheet>     groups="daily_report.concern_managers,daily_report.directors_report,daily_report.admin_report"/>
+                </header>
+                <sheet>
                     <div class="oe_button_box" name="button_box">
                         <button class="oe_stat_button" type="action" 
                                 name="%(daily_report.action_concern_action)d" 
                                 context="{'default_employee_report_id': active_id, 'default_concern_type': 'student', 'search_default_employee_report_id': active_id, 'search_default_type_student': 1}" 
-                                icon="fa-exclamation-circle" oncern_action)d" 
-                                invisible="student_concern_count == 0"> active_id, 'default_concern_type': 'student', 'search_default_employee_report_id': active_id, 'search_default_type_student': 1}" 
-                            <div class="o_stat_info">circle" 
+                                icon="fa-exclamation-circle" 
+                                invisible="student_concern_count == 0">
+                            <div class="o_stat_info">
                                 <field name="student_concern_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Student Actions</span>
-                            </div>ield name="student_concern_count" class="o_stat_value"/>
-                        </button>span class="o_stat_text">Student Actions</span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="action" 
                                 name="%(daily_report.action_concern_action)d" 
                                 context="{'default_employee_report_id': active_id, 'default_concern_type': 'employee', 'search_default_employee_report_id': active_id, 'search_default_type_employee': 1}" 
-                                icon="fa-users" port.action_concern_action)d" 
-                                invisible="employee_concern_count == 0">active_id, 'default_concern_type': 'employee', 'search_default_employee_report_id': active_id, 'search_default_type_employee': 1}" 
+                                icon="fa-users" 
+                                invisible="employee_concern_count == 0">
                             <div class="o_stat_info">
                                 <field name="employee_concern_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Employee Actions</span>
-                            </div>ield name="employee_concern_count" class="o_stat_value"/>
-                        </button>span class="o_stat_text">Employee Actions</span>
+                            </div>
+                        </button>
                         <button class="oe_stat_button" type="action" 
                                 name="%(daily_report.action_concern_action)d" 
                                 context="{'default_employee_report_id': active_id, 'default_concern_type': 'other', 'search_default_employee_report_id': active_id, 'search_default_type_other': 1}" 
-                                icon="fa-question-circle" n_concern_action)d" 
-                                invisible="other_concern_count == 0">': active_id, 'default_concern_type': 'other', 'search_default_employee_report_id': active_id, 'search_default_type_other': 1}" 
-                            <div class="o_stat_info">cle" 
+                                icon="fa-question-circle" 
+                                invisible="other_concern_count == 0">
+                            <div class="o_stat_info">
                                 <field name="other_concern_count" class="o_stat_value"/>
                                 <span class="o_stat_text">Other Actions</span>
-                            </div>ield name="other_concern_count" class="o_stat_value"/>
-                        </button>span class="o_stat_text">Other Actions</span>
-                    </div>  </div>
+                            </div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" readonly="1"/>
                         </h1>
-                    </div>  <field name="name" readonly="1"/>
-                    <group>1>
+                    </div>
+                    <group>
                         <group>
                             <field name="date" readonly="1"/>
                             <field name="department_id" readonly="1"/>
-                        </group>ld name="date" readonly="1"/>
-                        <group>eld name="department_id" readonly="1"/>
+                        </group>
+                        <group>
                             <field name="state" readonly="1"/>
                             <field name="branch_id" readonly="1"/>
-                        </group>ld name="state" readonly="1"/>
-                    </group><field name="branch_id" readonly="1"/>
-                    <notebook>p>
+                        </group>
+                    </group>
+                    <notebook>
                         <page string="Concerns" name="concerns">
                             <group>
                                 <field name="student_concerns" readonly="1"/>
                                 <field name="employee_concerns" readonly="1"/>
-                                <field name="other_concerns" readonly="1"/>/>
-                            </group>ld name="employee_concerns" readonly="1"/>
-                        </page> <field name="other_concerns" readonly="1"/>
+                                <field name="other_concerns" readonly="1"/>
+                            </group>
+                        </page>
                         <page string="Actions Taken" name="concern_actions">
                             <field name="concern_action_ids" readonly="0">
-                                <tree>Actions Taken" name="concern_actions">
-                                    <field name="name" string="Action Title"/>ids" readonly="0">
+                                <tree>
+                                    <field name="name" string="Action Title"/>
                                     <field name="concern_type"/>
                                     <field name="action_date"/>
-                                    <field name="taken_by"/>e"/>
+                                    <field name="taken_by"/>
                                     <field name="description"/>
-                                    <field name="state" widget="badge"/>eld name="taken_by"/>
-                                </tree><field name="state" widget="badge"/>
-                            </field> </tree>
-                        </page>ield>
-                    </notebook></page>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>ield name="message_follower_ids" widget="mail_followers"/>
-                </div> <field name="message_ids" widget="mail_thread"/>
-            </form></div>
-        </field>/form>
-    </record>        </field>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
 
     <record id="view_concerns_search" model="ir.ui.view">
-        <field name="name">concerns.search</field>view">
-        <field name="model">employee.report</field>arch</field>
-        <field name="arch" type="xml">field>
-            <search string="Search Concerns">">
-                <field name="name"/>oncerns">
+        <field name="name">concerns.search</field>
+        <field name="model">employee.report</field>
+        <field name="arch" type="xml">
+            <search string="Search Concerns">
+                <field name="name"/>
                 <field name="date"/>
                 <field name="department_id"/>
                 <filter string="Without Actions" name="no_actions" domain="[('has_action', '=', False)]"/>
-                <filter string="With Actions" name="with_actions" domain="[('has_action', '=', True)]"/>e="no_actions" domain="[('has_action', '=', False)]"/>
-                <group expand="0" string="Group By">True)]"/>
+                <filter string="With Actions" name="with_actions" domain="[('has_action', '=', True)]"/>
+                <group expand="0" string="Group By">
                     <filter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
-                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>ter string="Date" name="group_by_date" context="{'group_by': 'date'}"/>
-                </group>filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
-            </search></group>
-        </field>/search>
-    </record>        </field>
+                    <filter string="Department" name="group_by_department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
 
     <record id="action_concerns_view" model="ir.actions.act_window">
-        <field name="name">Employee Concerns</field>.act_window">
-        <field name="res_model">employee.report</field>ld>
+        <field name="name">Employee Concerns</field>
+        <field name="res_model">employee.report</field>
         <field name="view_mode">tree,form</field>
         <field name="domain">[('has_concerns', '=', True)]</field>
-        <field name="context">{'search_default_no_actions': 1}</field>)]</field>
-        <field name="view_id" ref="view_concerns_tree"/>ield>
-        <field name="search_view_id" ref="view_concerns_search"/>d name="view_id" ref="view_concerns_tree"/>
-    </record>        <field name="search_view_id" ref="view_concerns_search"/>
+        <field name="context">{'search_default_no_actions': 1}</field>
+        <field name="view_id" ref="view_concerns_tree"/>
+        <field name="search_view_id" ref="view_concerns_search"/>
+    </record>
 
     <menuitem id="menu_concerns"
               name="Employee Concerns"
               parent="menu_daily_report_root"
               action="action_concerns_view"
-              groups="daily_report.directors_report,daily_report.admin_report,daily_report.concern_managers"_concerns_view"
-              sequence="5"/>       groups="daily_report.directors_report,daily_report.admin_report,daily_report.concern_managers"
-</odoo>              sequence="5"/>
-
+              groups="daily_report.directors_report,daily_report.admin_report,daily_report.concern_managers"
+              sequence="5"/>
 </odoo>
