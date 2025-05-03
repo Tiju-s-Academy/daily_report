@@ -35,8 +35,15 @@ class ConcernAction(models.Model):
                 report_id = vals.get('employee_report_id')
                 if report_id:
                     report = self.env['employee.report'].browse(report_id)
+                    
+                    # Get proper employee name
+                    employee_name = report.name
+                    if hasattr(report, 'employee_id') and report.employee_id and report.employee_id.name:
+                        employee_name = report.employee_id.name
+                    
                     vals['name'] = _("Action against {}'s concern on {}").format(
-                        report.name, fields.Date.to_string(vals.get('action_date', fields.Date.today()))
+                        employee_name,
+                        fields.Date.to_string(vals.get('action_date', fields.Date.today()))
                     )
                 else:
                     vals['name'] = _("Action on {}").format(

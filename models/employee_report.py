@@ -306,9 +306,15 @@ class EmployeeReport(models.Model):
         """Open a form to quickly create a concern action record"""
         self.ensure_one()
         
+        # Format employee name properly
+        employee_name = self.name
+        if hasattr(self, 'employee_id') and self.employee_id and self.employee_id.name:
+            employee_name = self.employee_id.name
+        
         # Generate default title: "Action against [Employee Name]'s concern on [Date]"
         default_title = _("Action against {}'s concern on {}").format(
-            self.name, self.date.strftime('%d-%m-%Y') if self.date else ''
+            employee_name,
+            self.date.strftime('%d-%m-%Y') if self.date else ''
         )
         
         return {
