@@ -15,6 +15,7 @@
         'views/employee_report_view.xml',
         'wizard/report_reject_wizard_view.xml',
         'views/support_staff_view.xml',
+        'views/concern_action_view.xml',
         # 'views/department_dashboard_view.xml',
         'views/concerns_view.xml',
         'views/daily_report_menu.xml',

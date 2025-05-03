@@ -34,6 +34,11 @@ access_balance_staff_manager,staff manager balance report,model_balance_wrk_supp
 access_job_status_staff_manager,job status staff manager,model_job_status,staff_manager,1,1,0,0
 access_staff_manger,staff report manger,model_support_staff,staff_manager,1,1,0,0
 
+access_concern_action_admin,concern action admin,model_concern_action,admin_report,1,1,1,1
+access_concern_action_directors,concern action directors,model_concern_action,directors_report,1,1,1,1
+access_concern_action_concern_managers,concern action managers,model_concern_action,concern_managers,1,1,1,1
+access_concern_action_user,concern action user,model_concern_action,user_report,1,0,0,0
+
 
 
 

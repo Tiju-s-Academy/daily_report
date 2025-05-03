@@ -106,6 +106,18 @@
                                 <field name="employee_concerns" placeholder="Enter any employee related concerns..." readonly="state !='draft'"/>
                                 <field name="other_concerns" placeholder="Enter any other concerns..." readonly="state !='draft'"/>
                             </group>
+                            <group attrs="{'invisible': [('concern_action_count', '=', 0)]}">
+                                <separator string="Actions Taken" colspan="4"/>
+                                <field name="concern_action_ids" readonly="1">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="concern_type"/>
+                                        <field name="action_date"/>
+                                        <field name="taken_by"/>
+                                        <field name="state" widget="badge"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </page>
                     </notebook>
                 </sheet>

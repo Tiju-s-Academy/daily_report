@@ -29,6 +29,10 @@
         <field name="name">Staff: Manager</field>
         <field name="category_id" ref="report_group"/>
     </record>
+    <record id="concern_managers" model="res.groups">
+        <field name="name">Concern Managers</field>
+        <field name="category_id" ref="report_group"/>
+    </record>
 </odoo>
 
 

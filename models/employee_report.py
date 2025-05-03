@@ -268,6 +268,21 @@ class EmployeeReport(models.Model):
     other_concerns = fields.Text(string="Other Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
     has_concerns = fields.Boolean(string="Has Concerns", compute='_compute_has_concerns', store=True)
 
+    concern_action_ids = fields.One2many('concern.action', 'employee_report_id', string="Concern Actions")
+    student_concern_count = fields.Integer(string="Student Actions", compute="_compute_concern_action_count")
+    employee_concern_count = fields.Integer(string="Employee Actions", compute="_compute_concern_action_count")
+    other_concern_count = fields.Integer(string="Other Actions", compute="_compute_concern_action_count")
+    concern_action_count = fields.Integer(string="Total Actions", compute="_compute_concern_action_count")
+    
+    @api.depends('concern_action_ids', 'concern_action_ids.state')
+    def _compute_concern_action_count(self):
+        for record in self:
+            actions = record.concern_action_ids
+            record.student_concern_count = len(actions.filtered(lambda a: a.concern_type == 'student'))
+            record.employee_concern_count = len(actions.filtered(lambda a: a.concern_type == 'employee'))
+            record.other_concern_count = len(actions.filtered(lambda a: a.concern_type == 'other'))
+            record.concern_action_count = len(actions)
+
     @api.depends('student_concerns', 'employee_concerns', 'other_concerns')
     def _compute_has_concerns(self):
         for record in self:
