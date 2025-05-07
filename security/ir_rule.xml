@@ -58,5 +58,11 @@
         <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
         <field name="domain_force">[(1, '=', 1)]</field>
     </record>
+    <record id="rule_concerns_manager_only_concerns" model="ir.rule">
+        <field name="name">Concerns Manager: Only See Concerns</field>
+        <field name="model_id" ref="model_employee_report"/>
+        <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
+        <field name="domain_force">[('has_concerns', '=', True)]</field>
+    </record>
 </odoo>
 
