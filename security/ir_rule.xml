@@ -64,5 +64,25 @@
         <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
         <field name="domain_force">[('has_concerns', '=', True)]</field>
     </record>
+
+    <!-- Rule to restrict access to subordinates' records -->
+    <record id="rule_employee_report_subordinates" model="ir.rule">
+        <field name="name">Employee Report: Subordinates Only</field>
+        <field name="model_id" ref="model_employee_report"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[
+            '|',
+            ('name.parent_id.user_id', '=', user.id),  /* Subordinates */
+            ('create_uid', '=', user.id)              /* Own records */
+        ]</field>
+    </record>
+
+    <!-- Rule to allow access to all records with concerns -->
+    <record id="rule_employee_report_all_concerns" model="ir.rule">
+        <field name="name">Employee Report: All Concerns</field>
+        <field name="model_id" ref="model_employee_report"/>
+        <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
+        <field name="domain_force">[('has_concerns', '=', True)]</field>
+    </record>
 </odoo>
 
