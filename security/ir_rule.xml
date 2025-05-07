@@ -52,5 +52,11 @@
             ]
         </field>
     </record>
+    <record id="rule_concerns_manager_all_concerns" model="ir.rule">
+        <field name="name">Concerns Manager: See All Concerns</field>
+        <field name="model_id" ref="model_employee_report"/>
+        <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
 </odoo>
 

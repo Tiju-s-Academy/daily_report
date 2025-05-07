@@ -145,6 +145,6 @@
               name="Employee Concerns"
               parent="menu_daily_report_root"
               action="action_concerns_view"
-              groups="daily_report.directors_report,daily_report.admin_report,daily_report.concern_managers"
+              groups="daily_report.directors_report,daily_report.admin_report,daily_report.concerns_manager_group"
               sequence="5"/>
 </odoo>
