@@ -70,19 +70,35 @@
         <field name="name">Employee Report: Subordinates Only</field>
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">[
-            '|',
-            ('name.parent_id.user_id', '=', user.id),  /* Subordinates */
-            ('create_uid', '=', user.id)              /* Own records */
-        ]</field>
+        <field name="domain_force">[('create_uid', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Rule for managers to see their subordinates' records -->
+    <record id="rule_manager_subordinates" model="ir.rule">
+        <field name="name">Manager: See Subordinates Reports</field>
+        <field name="model_id" ref="model_employee_report"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('name.parent_id.user_id', '=', user.id)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 
     <!-- Rule to allow access to all records with concerns -->
-    <record id="rule_employee_report_all_concerns" model="ir.rule">
-        <field name="name">Employee Report: All Concerns</field>
+    <record id="rule_concerns_manager" model="ir.rule">
+        <field name="name">Concerns Manager: All Concerns</field>
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('daily_report.concerns_manager_group'))]"/>
         <field name="domain_force">[('has_concerns', '=', True)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
     </record>
 </odoo>
 

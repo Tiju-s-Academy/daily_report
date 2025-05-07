@@ -39,6 +39,7 @@ access_concern_action_directors,concern action directors,model_concern_action,di
 access_concern_action_concern_managers,concern action managers,model_concern_action,concern_managers,1,1,1,1
 access_concern_action_user,concern action user,model_concern_action,user_report,1,0,0,0
 access_employee_report_concerns_manager,employee report concerns manager,model_employee_report,concerns_manager_group,1,0,0,0
+access_concern_action_concerns_manager,concern action concerns manager,model_concern_action,concerns_manager_group,1,1,1,0
 
 
 
