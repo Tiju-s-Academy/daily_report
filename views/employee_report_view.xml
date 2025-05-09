@@ -15,6 +15,7 @@
             </tree>
         </field>
     </record>
+
     <record id="view_employee_report_search" model="ir.ui.view">
         <field name="name">employee.report.search</field>
         <field name="model">employee.report</field>
@@ -105,18 +106,6 @@
                                 <field name="student_concerns" placeholder="Enter any student related concerns..." readonly="state !='draft'"/>
                                 <field name="employee_concerns" placeholder="Enter any employee related concerns..." readonly="state !='draft'"/>
                                 <field name="other_concerns" placeholder="Enter any other concerns..." readonly="state !='draft'"/>
-                            </group>
-                            <group invisible="[('concern_action_count', '=', 0)]">
-                                <separator string="Actions Taken" colspan="4"/>
-                                <field name="concern_action_ids" readonly="1">
-                                    <tree>
-                                        <field name="name"/>
-                                        <field name="concern_type"/>
-                                        <field name="action_date"/>
-                                        <field name="taken_by"/>
-                                        <field name="state" widget="badge"/>
-                                    </tree>
-                                </field>
                             </group>
                         </page>
                     </notebook>

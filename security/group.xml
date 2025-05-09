@@ -33,10 +33,6 @@
         <field name="name">Concern Managers</field>
         <field name="category_id" ref="report_group"/>
     </record>
-    <record id="concerns_manager_group" model="res.groups">
-        <field name="name">Concerns Manager</field>
-        <field name="category_id" ref="report_group"/>
-    </record>
 </odoo>
 
 

@@ -181,10 +181,8 @@ class EmployeeReport(models.Model):
                 if not report.to_work_on or not report.expected_close_date:
                     raise ValidationError(
                         _("For task '%s': When status is not 'Completed', both 'To Work On' and 'Expected Close Date' are mandatory.") % report.task_id)
-
-        # if self._compare_time_strings(self.actual_work_hours, self.total_work_hours):
-        #     raise ValidationError(_("The Total work hours should be achieved by the employee."))
-
+        if self.student_concerns or self.employee_concerns or self.other_concerns:
+            self.has_concerns = True
         self.write({
             'state': 'submitted',
             'prepared_by': self.env.user.employee_id.id,
@@ -263,64 +261,32 @@ class EmployeeReport(models.Model):
     summary = fields.Html(string="Summary", store=True)
 
     # Complaint Fields
-    student_concerns = fields.Text(string="Student Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
-    employee_concerns = fields.Text(string="Employee Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
-    other_concerns = fields.Text(string="Other Concerns", states={'draft': [('readonly', False)], 'submitted': [('readonly', True)], 'approved': [('readonly', True)]})
-    has_concerns = fields.Boolean(string="Has Concerns", compute='_compute_has_concerns', store=True)
+    student_concerns = fields.Text(string="Student Concerns")
+    employee_concerns = fields.Text(string="Employee Concerns")
+    other_concerns = fields.Text(string="Other Concerns")
+    has_concerns = fields.Boolean(string="Has Concerns")
 
-    # Update the concern_action_count field to be stored
-    concern_action_count = fields.Integer(string="Actions Count", compute="_compute_concern_action_count", store=True)
-    has_action = fields.Boolean(string="Has Action", compute="_compute_concern_action_count", store=True)
-    latest_action_summary = fields.Char(string="Latest Action Summary", compute="_compute_latest_action", store=True)
-    action_taken_by = fields.Char(string="Action Taken By", compute="_compute_latest_action", store=True)
 
-    concern_action_ids = fields.One2many('concern.action', 'employee_report_id', string="Concern Actions")
-    student_concern_count = fields.Integer(string="Student Actions", compute="_compute_concern_action_count")
-    employee_concern_count = fields.Integer(string="Employee Actions", compute="_compute_concern_action_count")
-    other_concern_count = fields.Integer(string="Other Actions", compute="_compute_concern_action_count")
-    concern_action_count = fields.Integer(string="Total Actions", compute="_compute_concern_action_count")
-    
-    @api.depends('concern_action_ids', 'concern_action_ids.state')
-    def _compute_concern_action_count(self):
-        for report in self:
-            actions = report.concern_action_ids
-            report.concern_action_count = len(actions)
-            report.has_action = bool(actions)
-            
-            # Calculate specific concern type counts if they exist in the model
-            if hasattr(report, 'student_concern_count'):
-                report.student_concern_count = len(actions.filtered(lambda a: a.concern_type == 'student'))
-            if hasattr(report, 'employee_concern_count'):
-                report.employee_concern_count = len(actions.filtered(lambda a: a.concern_type == 'employee'))
-            if hasattr(report, 'other_concern_count'):
-                report.other_concern_count = len(actions.filtered(lambda a: a.concern_type == 'other'))
-
-    @api.depends('student_concerns', 'employee_concerns', 'other_concerns')
-    def _compute_has_concerns(self):
-        for record in self:
-            record.has_concerns = bool(record.student_concerns or 
-                                     record.employee_concerns or 
-                                     record.other_concerns)
 
     def action_quick_create_concern(self):
         """Open a form to quickly create a concern action record"""
         self.ensure_one()
-        
+
         # Format employee name properly
         employee_name = self.name
         if hasattr(self, 'employee_id') and self.employee_id and self.employee_id.name:
             employee_name = self.employee_id.name
-        
+
         # Generate default title: "Action against [Employee Name]'s concern on [Date]"
         default_title = _("Action against {}'s concern on {}").format(
             employee_name,
             self.date.strftime('%d-%m-%Y') if self.date else ''
         )
-        
+
         return {
             'name': _('Create Action'),
             'type': 'ir.actions.act_window',
-            'res_model': 'concern.action',
+            'res_model': 'concern.action.wizard',
             'view_mode': 'form',
             'target': 'new',  # Opens as a dialog/popup
             'context': {
@@ -329,31 +295,18 @@ class EmployeeReport(models.Model):
             },
         }
 
-    @api.depends('concern_action_ids', 'concern_action_ids.action_date', 
-                 'concern_action_ids.name', 'concern_action_ids.description',
-                 'concern_action_ids.taken_by')
-    def _compute_latest_action(self):
-        for report in self:
-            latest_action = False
-            if report.concern_action_ids:
-                # Get the most recent action
-                latest_action = report.concern_action_ids.sorted(
-                    key=lambda r: (r.action_date, r.id), reverse=True)[0]
-        
-            if latest_action:
-                # Get a summary from description or name
-                if latest_action.description:
-                    # If there's a description, use a trimmed version
-                    summary = latest_action.description.strip()
-                    if len(summary) > 50:
-                        summary = summary[:47] + '...'
-                else:
-                    # Otherwise use the action name
-                    summary = latest_action.name or ''
-                    
-                report.latest_action_summary = summary
-                report.action_taken_by = latest_action.taken_by.name if latest_action.taken_by else ''
-            else:
-                report.latest_action_summary = False
-                report.action_taken_by = False
-
+    action_title = fields.Char(string="Action Title")
+    action_description = fields.Text(string="Action Description")
+    action_date = fields.Date(string="Action Date")
+    action_state = fields.Selection([
+        ('draft', 'Draft'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+        ('canceled', 'Canceled')
+    ], string="Status")
+    action_solved_by = fields.Many2one('hr.employee', string="Action Solved By")
+    concern_type = fields.Selection([
+        ('student', 'Student Concern'),
+        ('employee', 'Employee Concern'),
+        ('other', 'Other Concern')
+    ], string="Concern Type")

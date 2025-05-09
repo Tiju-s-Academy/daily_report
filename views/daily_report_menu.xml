@@ -23,4 +23,10 @@
     <menuitem id="menu_job_status" name="Job Status" parent="menu_daily_report_root"
               groups="super_admin"
               action="action_job_status" sequence="4"/>
+    <menuitem id="menu_concern"
+              name="Employee Concerns"
+              parent="menu_daily_report_root"
+              action="action_concerns_view"
+              groups="daily_report.concern_managers"
+              sequence="5"/>
 </odoo>
