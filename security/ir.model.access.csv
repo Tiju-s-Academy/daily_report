@@ -35,6 +35,7 @@ access_job_status_staff_manager,job status staff manager,model_job_status,staff_
 access_staff_manger,staff report manger,model_support_staff,staff_manager,1,1,0,0
 
 access_concern_action_wizard,concern manger,model_concern_action_wizard,concern_managers,1,1,1,1
+access_concern_action,concern action,model_concern_action,admin_report,1,1,1,1
 
 access_employee_additional_manager_admin,employee additional manager admin,model_employee_additional_manager,admin_report,1,1,1,1
 access_employee_additional_manager_directors,employee additional manager directors,model_employee_additional_manager,directors_report,1,1,0,0
