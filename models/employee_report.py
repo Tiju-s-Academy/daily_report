@@ -18,6 +18,8 @@ class EmployeeReport(models.Model):
     department_id = fields.Many2one('hr.department', string="Department",
                                     default=lambda self: self.env.user.employee_id.department_id, readonly=True)
     branch_id = fields.Many2one('employee.branch', string="Branch", compute='_compute_branch_id', store=True)
+    reporting_manager_id = fields.Many2one('hr.employee', string="Reporting Manager", 
+                                         help="Select the specific manager this report is intended for")
 
     @api.depends('name')
     def _compute_branch_id(self):
@@ -137,6 +139,27 @@ class EmployeeReport(models.Model):
     is_md = fields.Boolean(string='Is MD',compute="_compute_is_manager", store=True)
     submitted_time = fields.Datetime(string='Submission On',readonly=True,tracking=True)
     approved_time = fields.Datetime(string='Approved On',readonly=True,tracking=True)
+    available_manager_ids = fields.Many2many('hr.employee', compute='_compute_available_manager_ids')
+    
+    @api.depends('name')
+    def _compute_available_manager_ids(self):
+        """Compute the list of available managers for this employee"""
+        for record in self:
+            available_managers = []
+            if record.name:
+                # Add direct manager if exists
+                if record.name.parent_id:
+                    available_managers.append(record.name.parent_id.id)
+                
+                # Add additional managers from new model
+                add_managers = self.env['employee.additional.manager'].search([
+                    ('employee_id', '=', record.name.id),
+                    ('active', '=', True)
+                ])
+                for add_manager in add_managers:
+                    available_managers.append(add_manager.manager_id.id)
+            
+            record.available_manager_ids = available_managers
 
     @api.depends('name')
     def _compute_is_half_day(self):
@@ -154,19 +177,52 @@ class EmployeeReport(models.Model):
         else:
             self.is_half_day = False
 
-    @api.depends('name', 'name.parent_id')
+    @api.depends('name', 'name.parent_id', 'reporting_manager_id')
     def _compute_is_manager(self):
         for record in self:
-            record.is_manager = record.name.parent_id.user_id == self.env.user
-            print("manager ",record.is_manager)
+            # Check if user is direct manager
+            is_direct_manager = record.name.parent_id.user_id == self.env.user
+            
+            # Check if user is the specific reporting manager for this report
+            is_reporting_manager = False
+            if record.reporting_manager_id and record.reporting_manager_id.user_id == self.env.user:
+                is_reporting_manager = True
+                
+            # Check if user is an additional manager
+            is_additional_manager = False
+            if record.name:
+                additional_manager_recs = self.env['employee.additional.manager'].search([
+                    ('employee_id', '=', record.name.id),
+                    ('manager_id.user_id', '=', self.env.user.id)
+                ])
+                is_additional_manager = bool(additional_manager_recs)
+            
+            record.is_manager = is_direct_manager or is_reporting_manager or is_additional_manager
             record.is_director = self.env.user.has_group('daily_report.directors_report')
             record.is_md = self.env.user.has_group('daily_report.admin_report')
 
-    @api.constrains('name', 'date')
+    @api.constrains('name', 'date', 'reporting_manager_id')
     def _check_unique_record_per_day(self):
         for record in self:
-            if self.search_count([('name', '=', record.name.id), ('date', '=', record.date)]) > 1:
-                raise ValidationError(_("An employee can only submit one report per day."))
+            # Base domain for duplicate check
+            domain = [
+                ('name', '=', record.name.id),
+                ('date', '=', record.date),
+                ('id', '!=', record.id),  # Exclude current record
+            ]
+            
+            # If reporting to specific manager, only check for duplicates with same manager
+            if record.reporting_manager_id:
+                domain.append(('reporting_manager_id', '=', record.reporting_manager_id.id))
+            else:
+                # If not reporting to a specific manager, check for duplicates with no specific manager
+                domain.append(('reporting_manager_id', '=', False))
+                
+            if self.search_count(domain) > 0:
+                if record.reporting_manager_id:
+                    raise ValidationError(_("You have already submitted a report for this day to the manager %s.") % record.reporting_manager_id.name)
+                else:
+                    raise ValidationError(_("You have already submitted a general report for this day."))
 
 
 

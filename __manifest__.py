@@ -13,6 +13,7 @@
         'views/job_status_view.xml',
         'views/report_view.xml',
         'views/employee_report_view.xml',
+        'views/additional_manager_view.xml',
         'wizard/report_reject_wizard_view.xml',
         'wizard/concern_action_wizard_view.xml',
         'views/support_staff_view.xml',

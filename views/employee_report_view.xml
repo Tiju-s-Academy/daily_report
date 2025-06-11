@@ -23,11 +23,16 @@
             <search string="Employee Reports">
                 <filter string="My Report" name="my_report" domain="[('create_uid', '=', uid)]"/>
                 <filter string="My Team" name="my_team"
-                        domain="[('name.parent_id.user_id', '=', uid),('state','!=','draft')]"/>
+                        domain="['|', ('name.parent_id.user_id', '=', uid), ('reporting_manager_id.user_id', '=', uid), ('state','!=','draft')]"/>
                 <filter string="Today's Report" name="today_report" domain="[('date', '=', context_today())]"/>
+                <filter string="Reporting to Me" name="reporting_to_me" domain="[('reporting_manager_id.user_id', '=', uid)]"/>
                 <field name="name"/>
                 <field name="department_id"/>
+                <field name="reporting_manager_id"/>
                 <field name="state"/>
+                <group expand="0" string="Group By">
+                    <filter string="Reporting Manager" name="group_by_reporting_manager" context="{'group_by': 'reporting_manager_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -63,11 +68,14 @@
                             <field name="total_work_hours"/>
                             <field name="is_half_day" invisible="1"/>
                             <field name="total_work_minutes" invisible="1"/>
+                            <field name="available_manager_ids" invisible="1"/>
                         </group>
                         <group>
                             <field name="branch_id" options="{'no_open': True}" readonly="1"/>
                             <field name="actual_work_hours"/>
                             <field name="date" readonly="not is_director"/>
+                            <field name="reporting_manager_id" domain="[('id', 'in', available_manager_ids)]" options="{'no_create': True}" 
+                                   attrs="{'readonly': [('state', '!=', 'draft')]}" placeholder="Select specific reporting manager..."/>
                         </group>
                     </group>
                     <notebook>
