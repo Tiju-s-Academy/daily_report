@@ -69,12 +69,33 @@
         <field name="name">Manager: See Subordinates Reports</field>
         <field name="model_id" ref="model_employee_report"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">[('name.parent_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', 
+            ('name.parent_id.user_id', '=', user.id),
+            ('reporting_manager_id.user_id', '=', user.id)
+        ]</field>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="True"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
 
+    <!-- Rule for Additional Manager model -->
+    <record id="rule_employee_additional_manager_admin" model="ir.rule">
+        <field name="name">Admin: Full access to Additional Managers</field>
+        <field name="model_id" ref="model_employee_additional_manager"/>
+        <field name="groups" eval="[(4, ref('admin_report'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="rule_employee_additional_manager_directors" model="ir.rule">
+        <field name="name">Directors: Read Additional Managers</field>
+        <field name="model_id" ref="model_employee_additional_manager"/>
+        <field name="groups" eval="[(4, ref('directors_report'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+    </record>
 </odoo>
 

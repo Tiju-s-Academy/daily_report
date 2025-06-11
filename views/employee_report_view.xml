@@ -8,6 +8,7 @@
                   decoration-danger="state == 'rejected'">
                 <field name="name"/>
                 <field name="department_id"/>
+                <field name="reporting_manager_id"/>
                 <field name="summary"/>
                 <field name="date"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'"
@@ -75,7 +76,7 @@
                             <field name="actual_work_hours"/>
                             <field name="date" readonly="not is_director"/>
                             <field name="reporting_manager_id" domain="[('id', 'in', available_manager_ids)]" options="{'no_create': True}" 
-                                   attrs="{'readonly': [('state', '!=', 'draft')]}" placeholder="Select specific reporting manager..."/>
+                                   readonly="state != 'draft'" placeholder="Select specific reporting manager..."/>
                         </group>
                     </group>
                     <notebook>
