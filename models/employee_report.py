@@ -19,7 +19,7 @@ class EmployeeReport(models.Model):
                                     default=lambda self: self.env.user.employee_id.department_id, readonly=True)
     branch_id = fields.Many2one('employee.branch', string="Branch", compute='_compute_branch_id', store=True)
     reporting_manager_id = fields.Many2one('hr.employee', string="Reporting Manager", 
-                                         help="Select the specific manager this report is intended for")
+                                         help="Select the specific manager this report is intended for. If you have only one manager, it will be automatically selected.")
 
     @api.depends('name')
     def _compute_branch_id(self):
@@ -143,7 +143,10 @@ class EmployeeReport(models.Model):
     
     @api.depends('name')
     def _compute_available_manager_ids(self):
-        """Compute the list of available managers for this employee"""
+        """
+        Compute the list of available managers for this employee
+        If there's only one manager available, automatically select that manager
+        """
         for record in self:
             available_managers = []
             if record.name:
@@ -160,6 +163,35 @@ class EmployeeReport(models.Model):
                     available_managers.append(add_manager.manager_id.id)
             
             record.available_manager_ids = available_managers
+            
+            # Auto-select manager if there's only one available and the field is empty
+            if len(available_managers) == 1 and not record.reporting_manager_id and record.state == 'draft':
+                record.reporting_manager_id = available_managers[0]
+
+    @api.onchange('name')
+    def _onchange_name(self):
+        """
+        Auto-select the reporting manager when employee changes
+        If there's only one available manager, select it automatically
+        """
+        if self.name and not self.reporting_manager_id:
+            available_managers = []
+            
+            # Add direct manager if exists
+            if self.name.parent_id:
+                available_managers.append(self.name.parent_id.id)
+            
+            # Add additional managers
+            add_managers = self.env['employee.additional.manager'].search([
+                ('employee_id', '=', self.name.id),
+                ('active', '=', True)
+            ])
+            
+            for add_manager in add_managers:
+                available_managers.append(add_manager.manager_id.id)
+            
+            if len(available_managers) == 1:
+                self.reporting_manager_id = available_managers[0]
 
     @api.depends('name')
     def _compute_is_half_day(self):

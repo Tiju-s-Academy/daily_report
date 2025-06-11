@@ -9,6 +9,7 @@ Daily Work Report (DWR) is an Odoo module that enables systematic tracking and m
 - **Daily Activity Reporting**: Employees can log their daily tasks, time spent, current status, and expected completion dates
 - **Work Time Management**: Automatic calculation of total and actual work hours, with support for half-day leaves
 - **Dual Reporting Structure**: Support for employees who report to multiple managers for different operations
+  - Auto-selection of manager when employee has only one reporting manager
 - **Task Status Tracking**: Monitor progress with customizable job status options (Completed, In Progress, etc.)
 - **Approval Workflow**: Submit → Manager Approval → Director Review process
 - **Concerns Management**: Record and track student, employee, or other concerns with ability to assign action items
