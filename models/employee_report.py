@@ -1,6 +1,6 @@
 import re
 import tz
-from datetime import date,datetime
+from datetime import date, datetime, timedelta
 import calendar
 
 from odoo import api, fields, models, _
@@ -137,6 +137,7 @@ class EmployeeReport(models.Model):
     is_half_day = fields.Boolean(string="Half day report", compute="_compute_is_half_day")
     is_director = fields.Boolean(string='Is Director', compute="_compute_is_manager", store=True)
     is_md = fields.Boolean(string='Is MD',compute="_compute_is_manager", store=True)
+    is_hod = fields.Boolean(string='Is HOD',compute="_compute_is_manager", store=True)
     submitted_time = fields.Datetime(string='Submission On',readonly=True,tracking=True)
     approved_time = fields.Datetime(string='Approved On',readonly=True,tracking=True)
     available_manager_ids = fields.Many2many('hr.employee', compute='_compute_available_manager_ids')
@@ -232,6 +233,7 @@ class EmployeeReport(models.Model):
             record.is_manager = is_direct_manager or is_reporting_manager or is_additional_manager
             record.is_director = self.env.user.has_group('daily_report.directors_report')
             record.is_md = self.env.user.has_group('daily_report.admin_report')
+            record.is_hod = self.env.user.has_group('daily_report.hod_report')
 
     @api.constrains('name', 'date', 'reporting_manager_id')
     def _check_unique_record_per_day(self):
@@ -260,10 +262,18 @@ class EmployeeReport(models.Model):
 
     def action_submit(self):
         today = fields.Date.today()
+        yesterday = fields.Date.today() - timedelta(days=1)
+        
         # Validate incomplete tasks
         for report in self.report_ids:
+            # Directors can submit reports for any date
             if not self.is_director:
-                if self.date != today:
+                # HODs can submit reports for today and yesterday only
+                if self.is_hod:
+                    if self.date not in [today, yesterday]:
+                        raise ValidationError(_("As HOD, you can only submit reports for today and yesterday"))
+                # Regular users can only submit reports for today
+                elif self.date != today:
                     raise ValidationError(_("Previous Record Can not submit Today"))
             if report.current_status.name.strip().lower() != 'completed':
                 if not report.to_work_on or not report.expected_close_date:
@@ -301,8 +311,16 @@ class EmployeeReport(models.Model):
                 }
             }
         elif self.is_manager:
-            if self.date != today:
+            yesterday = fields.Date.today() - timedelta(days=1)
+            
+            # HODs can approve reports for today and yesterday
+            if self.is_hod:
+                if self.date not in [today, yesterday]:
+                    raise UserError(_("As HOD, you can only approve reports for today and yesterday"))
+            # Regular managers can only approve today's reports
+            elif self.date != today:
                 raise UserError(_("You can only approve today's Reports"))
+                
             self.state = 'approved'
             self.approved_by = self.env.user.employee_id.id
             self.approved_time = fields.datetime.now()
@@ -333,8 +351,15 @@ class EmployeeReport(models.Model):
                 'context': {'default_employee_report_id': self.id},
             }
         elif self.is_manager:
-            if self.date != today:
-                raise UserError(_("You can only Reject today's Reports"))
+            yesterday = fields.Date.today() - timedelta(days=1)
+            
+            # HODs can reject reports for today and yesterday
+            if self.is_hod:
+                if self.date not in [today, yesterday]:
+                    raise UserError(_("As HOD, you can only reject reports for today and yesterday"))
+            # Regular managers can only reject today's reports
+            elif self.date != today:
+                raise UserError(_("You can only reject today's Reports"))
             return {
                 'type': 'ir.actions.act_window',
                 'name': _('Reason'),

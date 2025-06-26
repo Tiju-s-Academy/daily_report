@@ -45,6 +45,7 @@
             <form string="Employee Report">
                 <field name="is_manager" invisible="1"/>
                 <field name="is_director" invisible="1"/>
+                <field name="is_hod" invisible="1"/>
                 <header>
                     <button name="action_submit" string="Submit" type="object" invisible="is_manager or state !='draft'"
                             class="oe_highlight btn-primary"/>

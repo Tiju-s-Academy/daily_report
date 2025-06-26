@@ -21,9 +21,10 @@ Daily Work Report (DWR) is an Odoo module that enables systematic tracking and m
 - **Concern Tracking**: System for recording and resolving workplace concerns
 
 ### Role-Based Access
-- **User**: Regular employees who submit daily reports
-- **Manager**: Can approve/reject reports from their team members (including additional reporting managers)
-- **VP/Director**: Higher-level oversight and approval capabilities
+- **User**: Regular employees who submit daily reports (current day only)
+- **Manager**: Can approve/reject reports from their team members (current day only)
+- **Head of Department (HOD)**: Can submit, approve and reject reports from current day and previous day
+- **VP/Director**: Higher-level oversight and approval capabilities for reports from any date
 - **Admin**: Full system access and configuration rights
 - **Concern Managers**: Specialized access for handling reported concerns
 

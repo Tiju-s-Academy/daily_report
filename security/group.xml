@@ -33,6 +33,12 @@
         <field name="name">Concern Managers</field>
         <field name="category_id" ref="report_group"/>
     </record>
+    
+    <record id="hod_report" model="res.groups">
+        <field name="name">Head of Department (HOD)</field>
+        <field name="category_id" ref="report_group"/>
+        <field name="comment">Allows submission and approval of reports from previous days</field>
+    </record>
 </odoo>
 
 

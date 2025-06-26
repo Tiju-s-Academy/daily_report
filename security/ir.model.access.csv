@@ -40,7 +40,12 @@ access_concern_action_director,concern action director,model_concern_action,dire
 access_concern_action_user,concern action user,model_concern_action,user_report,1,0,0,0
 access_concern_action_manager,concern action manager,model_concern_action,concern_managers,1,1,1,1
 
+access_job_status_hod,job status hod,model_job_status,hod_report,1,1,0,0
+access_report_hod,report hod,model_report,hod_report,1,1,1,1
+access_employee_report_hod,employee report hod,model_employee_report,hod_report,1,1,1,1
+
 access_employee_additional_manager_admin,employee additional manager admin,model_employee_additional_manager,admin_report,1,1,1,1
 access_employee_additional_manager_directors,employee additional manager directors,model_employee_additional_manager,directors_report,1,1,0,0
+access_employee_additional_manager_hod,employee additional manager hod,model_employee_additional_manager,hod_report,1,1,0,0
 access_employee_additional_manager_user,employee additional manager user,model_employee_additional_manager,user_report,1,0,0,0
 
